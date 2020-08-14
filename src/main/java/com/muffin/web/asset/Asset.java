@@ -21,17 +21,15 @@ public class Asset {
     @Column(name = "asset_id") private long assetId;
     @Column(name = "total_asset") private int totalAsset;
     @Column(name = "transaction_date") private Date transactionDate;
-    @Column(name = "price_earnings_ratio") private int priceEarnigsRatio;
-    @Column(name = "profit_loss") private int profitLoss;
+    @Column(name = "purchase_price") private int purchasePrice;
     @Column(name = "share_count") private int shareCount;
     @Column(name = "transaction_type") private boolean transactionType;
 
     @Builder
-    public Asset(int totalAsset, Date transactionDate, int priceEarnigsRatio, int profitLoss, int shareCount, boolean transactionType) {
+    public Asset(int totalAsset, Date transactionDate, int purchasePrice, int shareCount, boolean transactionType) {
         this.totalAsset = totalAsset;
         this.transactionDate = transactionDate;
-        this.priceEarnigsRatio = priceEarnigsRatio;
-        this.profitLoss = profitLoss;
+        this.purchasePrice = purchasePrice;
         this.shareCount = shareCount;
         this.transactionType = transactionType;
     }

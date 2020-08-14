@@ -1,5 +1,7 @@
 package com.muffin.web.news;
 
+import com.muffin.web.board.Board;
+import com.muffin.web.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,32 +16,35 @@ public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "news_id") private long newsId;
-    @Column(name = "news_thumbnail") private String newsThumbnail;
     @Column(name = "news_title") private String newsTitle;
     @Column(name = "news_regDate") private String newsRegDate;
     @Column(name = "news_content") private String newsContent;
-    @Column(name = "news_keyword") private String newsKeyword;
+    @Column(name = "saved") private String saved;
+    @Column(name = "link") private String link;
+
 
 
     @Override
     public String toString() {
         return "News{" +
                 "newsId=" + newsId +
-                ", newsThumbnail='" + newsThumbnail + '\'' +
                 ", newsTitle='" + newsTitle + '\'' +
                 ", newsRegDate='" + newsRegDate + '\'' +
                 ", newsContent='" + newsContent + '\'' +
-                ", newsKeyword='" + newsKeyword + '\'' +
+                ", saved='" + saved + '\'' +
+                ", link='"+link+'\'' +
                 '}';
     }
 
     @Builder
-    News(String newsThumbnail, String newsTitle,
-         String newsRegDate, String newsContent, String newsKeyword){
-        this.newsThumbnail = newsThumbnail;
+    News(String newsTitle, String newsRegDate, String newsContent, String saved, String link){
         this.newsTitle = newsTitle;
         this.newsRegDate = newsRegDate;
         this.newsContent = newsContent;
-        this.newsKeyword = newsKeyword;
+        this.saved = saved;
+        this.link = link;
     }
+
+    @ManyToOne @JoinColumn(name="user_id")
+    private User user;
 }
