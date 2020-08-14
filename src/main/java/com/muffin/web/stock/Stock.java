@@ -21,16 +21,14 @@ public class Stock {
     @Column(name = "stock_name") private String stockName;
     @Column(name = "category_code") private int categoryCode;
     @Column(name = "category") private String category;
-    @Column(name = "listed_shares") private String listedShares;
 
     @Builder
-    public Stock(int symbol, String market, String stockName, int categoryCode, String category, String listedShares) {
+    public Stock(int symbol, String market, String stockName, int categoryCode, String category) {
         this.symbol = symbol;
         this.market = market;
         this.stockName = stockName;
         this.categoryCode = categoryCode;
         this.category = category;
-        this.listedShares = listedShares;
     }
 
     @ManyToOne @JoinColumn(name="asset_id")
