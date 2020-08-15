@@ -37,7 +37,7 @@ public class User {
     }
 
     @Builder
-    private User(String emailId, String password, String nickname, String name) {
+    public User(String emailId, String password, String nickname, String name) {
         this.emailId = emailId;
         this.password = password;
         this.nickname = nickname;

@@ -18,4 +18,7 @@ public class UserController {
         System.out.println(user);
         userService.save(user);
     }
+
+    @GetMapping("/csv")
+    public void readCsv() {userService.readCSV();}
 }

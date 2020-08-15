@@ -2,6 +2,9 @@ package com.muffin.web.asset;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
+import com.muffin.web.stock.Stock;
+import com.muffin.web.user.User;
+import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -24,21 +27,21 @@ public class QAsset extends EntityPathBase<Asset> {
 
     public final NumberPath<Long> assetId = createNumber("assetId", Long.class);
 
-    public final NumberPath<Integer> priceEarnigsRatio = createNumber("priceEarnigsRatio", Integer.class);
-
-    public final NumberPath<Integer> profitLoss = createNumber("profitLoss", Integer.class);
+    public final NumberPath<Integer> purchasePrice = createNumber("purchasePrice", Integer.class);
 
     public final NumberPath<Integer> shareCount = createNumber("shareCount", Integer.class);
 
-    public final ListPath<com.muffin.web.stock.Stock, com.muffin.web.stock.QStock> stockList = this.<com.muffin.web.stock.Stock, com.muffin.web.stock.QStock>createList("stockList", com.muffin.web.stock.Stock.class, com.muffin.web.stock.QStock.class, PathInits.DIRECT2);
+    public final com.muffin.web.stock.QStock stock;
 
     public final NumberPath<Integer> totalAsset = createNumber("totalAsset", Integer.class);
 
-    public final DateTimePath<java.util.Date> transactionDate = createDateTime("transactionDate", java.util.Date.class);
+    public final StringPath transactionDate = createString("transactionDate");
 
-    public final BooleanPath transactionType = createBoolean("transactionType");
+    public final StringPath transactionType = createString("transactionType");
 
     public final com.muffin.web.user.QUser user;
+    public CollectionExpression<?, Stock> stockName;
+    public CollectionExpression<?, User> userId;
 
     public QAsset(String variable) {
         this(Asset.class, forVariable(variable), INITS);
@@ -58,6 +61,7 @@ public class QAsset extends EntityPathBase<Asset> {
 
     public QAsset(Class<? extends Asset> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.stock = inits.isInitialized("stock") ? new com.muffin.web.stock.QStock(forProperty("stock"), inits.get("stock")) : null;
         this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

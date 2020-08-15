@@ -26,9 +26,7 @@ public class QStock extends EntityPathBase<Stock> {
 
     public final StringPath category = createString("category");
 
-    public final NumberPath<Integer> categoryCode = createNumber("categoryCode", Integer.class);
-
-    public final StringPath listedShares = createString("listedShares");
+    public final StringPath categoryCode = createString("categoryCode");
 
     public final StringPath market = createString("market");
 
@@ -36,7 +34,7 @@ public class QStock extends EntityPathBase<Stock> {
 
     public final StringPath stockName = createString("stockName");
 
-    public final NumberPath<Integer> symbol = createNumber("symbol", Integer.class);
+    public final StringPath symbol = createString("symbol");
 
     public QStock(String variable) {
         this(Stock.class, forVariable(variable), INITS);
