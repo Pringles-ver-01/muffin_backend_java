@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Optional;
 
 interface StockService extends GenericService<Stock> {
@@ -22,6 +23,7 @@ class StockServiceImpl implements StockService{
     private static final Logger logger = LoggerFactory.getLogger(StockServiceImpl.class);
     private final StockRepository repository;
 
+
     StockServiceImpl(StockRepository repository) {
         this.repository = repository;
     }
@@ -33,6 +35,10 @@ class StockServiceImpl implements StockService{
 
     @Override
     public Optional<Stock> findById(String id) {
+        return Optional.empty();
+    }
+
+    public Optional<Stock> findById(Long id) {
         return Optional.empty();
     }
 
@@ -67,11 +73,9 @@ class StockServiceImpl implements StockService{
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
             for(CSVRecord csvRecord : csvRecords){
                 repository.save(new Stock(
-                        csvRecord.get(0),
                         csvRecord.get(1),
                         csvRecord.get(2),
-                        csvRecord.get(3),
-                        csvRecord.get(4)
+                        new ArrayList<>()
                 ));
 
             }

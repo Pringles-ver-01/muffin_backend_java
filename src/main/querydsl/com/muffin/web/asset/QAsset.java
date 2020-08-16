@@ -2,9 +2,6 @@ package com.muffin.web.asset;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.muffin.web.stock.Stock;
-import com.muffin.web.user.User;
-import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -40,8 +37,6 @@ public class QAsset extends EntityPathBase<Asset> {
     public final StringPath transactionType = createString("transactionType");
 
     public final com.muffin.web.user.QUser user;
-    public CollectionExpression<?, Stock> stockName;
-    public CollectionExpression<?, User> userId;
 
     public QAsset(String variable) {
         this(Asset.class, forVariable(variable), INITS);
@@ -61,8 +56,8 @@ public class QAsset extends EntityPathBase<Asset> {
 
     public QAsset(Class<? extends Asset> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.stock = inits.isInitialized("stock") ? new com.muffin.web.stock.QStock(forProperty("stock"), inits.get("stock")) : null;
-        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user"), inits.get("user")) : null;
+        this.stock = inits.isInitialized("stock") ? new com.muffin.web.stock.QStock(forProperty("stock")) : null;
+        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user")) : null;
     }
 
 }

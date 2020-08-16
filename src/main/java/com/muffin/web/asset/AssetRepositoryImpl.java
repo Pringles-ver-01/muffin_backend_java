@@ -17,7 +17,6 @@ import java.util.List;
 import static com.muffin.web.asset.QAsset.asset;
 
 interface IAssetRepository{
-    Box<List<Asset>> getOneBudget(String userid);
     Asset showOneData();
 
     List<Asset> findTransacInfoList();
@@ -38,10 +37,6 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
         this.dataSource = dataSource;
     }
 
-    @Override
-    public Box<List<Asset>> getOneBudget(String userid) {
-        return (Box<List<Asset>>) queryFactory.select(asset.totalAsset).from(asset).fetch();
-    }
 
     @Override
     public Asset showOneData() {
@@ -53,23 +48,23 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     @Override
     public List<Asset> findTransacInfoList() {
         logger.info("findTransacInfoList()");
-        return queryFactory.select(Projections.fields(Asset.class, asset.transactionDate, asset.transactionType,
-                asset.shareCount, asset.totalAsset)).from(asset).fetch();
+        return queryFactory.selectFrom(asset).fetch();
     }
 
     @Override
     public List<Asset> getTransacList() {
         logger.info("AssetRepositoryImpl : getTransacList()");
-        QStock stock = QStock.stock;
         QUser user = QUser.user;
-        return queryFactory.select(
-                Projections.fields(
-                        Asset.class, asset.purchasePrice,
-                                    asset.totalAsset,
-                                    asset.transactionDate,
-                                    asset.transactionType)).from(asset)
-                .join(asset.stockName, stock)
-                .join(asset.userId, user)
+        return queryFactory.select(Projections.fields(Asset.class,
+                asset.assetId,
+                asset.totalAsset,
+                asset.transactionType,
+                asset.transactionDate,
+                asset.purchasePrice,
+                user.id
+                )).from(asset)
+                .innerJoin(user).on(user.id.eq(asset.user.id))
+                .fetchJoin()
                 .fetch();
     }
 }

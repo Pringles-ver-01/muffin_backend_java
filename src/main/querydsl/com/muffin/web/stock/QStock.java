@@ -18,17 +18,9 @@ public class QStock extends EntityPathBase<Stock> {
 
     private static final long serialVersionUID = -894905040L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QStock stock = new QStock("stock");
 
-    public final com.muffin.web.asset.QAsset asset;
-
-    public final StringPath category = createString("category");
-
-    public final StringPath categoryCode = createString("categoryCode");
-
-    public final StringPath market = createString("market");
+    public final ListPath<com.muffin.web.asset.Asset, com.muffin.web.asset.QAsset> assetList = this.<com.muffin.web.asset.Asset, com.muffin.web.asset.QAsset>createList("assetList", com.muffin.web.asset.Asset.class, com.muffin.web.asset.QAsset.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> stockId = createNumber("stockId", Long.class);
 
@@ -37,24 +29,15 @@ public class QStock extends EntityPathBase<Stock> {
     public final StringPath symbol = createString("symbol");
 
     public QStock(String variable) {
-        this(Stock.class, forVariable(variable), INITS);
+        super(Stock.class, forVariable(variable));
     }
 
     public QStock(Path<? extends Stock> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QStock(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QStock(PathMetadata metadata, PathInits inits) {
-        this(Stock.class, metadata, inits);
-    }
-
-    public QStock(Class<? extends Stock> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.asset = inits.isInitialized("asset") ? new com.muffin.web.asset.QAsset(forProperty("asset"), inits.get("asset")) : null;
+        super(Stock.class, metadata);
     }
 
 }

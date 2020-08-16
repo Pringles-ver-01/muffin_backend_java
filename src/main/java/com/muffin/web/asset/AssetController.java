@@ -1,6 +1,7 @@
 package com.muffin.web.asset;
 
 import com.muffin.web.util.Box;
+import com.querydsl.core.Tuple;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

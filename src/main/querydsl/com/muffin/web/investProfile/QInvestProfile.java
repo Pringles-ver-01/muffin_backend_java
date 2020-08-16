@@ -48,7 +48,7 @@ public class QInvestProfile extends EntityPathBase<InvestProfile> {
 
     public QInvestProfile(Class<? extends InvestProfile> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user")) : null;
     }
 
 }

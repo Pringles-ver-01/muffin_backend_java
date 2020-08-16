@@ -1,5 +1,6 @@
 package com.muffin.web.asset;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muffin.web.board.Board;
 import com.muffin.web.stock.Stock;
 import com.muffin.web.user.User;
@@ -8,12 +9,14 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @Table(name = "asset")
+@NoArgsConstructor
 public class Asset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,28 +27,28 @@ public class Asset {
     @Column(name = "transaction_date") private String transactionDate;
     @Column(name = "transaction_type") private String transactionType;
 
-    public Asset() {}
-
     @Builder
     public Asset(int purchasePrice,
                  int shareCount,
                  int totalAsset,
                  String transactionDate,
-                 String transactionType, String s, String s1) {
+                 String transactionType, User user, Stock stock) {
         this.totalAsset = totalAsset;
         this.transactionDate = transactionDate;
         this.shareCount = shareCount;
         this.transactionType = transactionType;
         this.purchasePrice = purchasePrice;
+        this.user = user;
+        this.stock = stock;
     }
 
-    @ManyToOne @JoinColumn(name="stock_name")
+    @JsonIgnore @ManyToOne @JoinColumn(name="stock_id")
     private Stock stock;
 
     @ManyToOne @JoinColumn(name="user_id")
     private User user;
 
-//    @OneToMany(mappedBy = "asset", cascade = CascadeType.ALL)
-//    private List<Stock> stockList;
+
 
 }
+

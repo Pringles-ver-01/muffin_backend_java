@@ -1,12 +1,12 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
     id 'war'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
-group = 'com.chatbot..'
+group = 'com.muffin_backend_java'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
