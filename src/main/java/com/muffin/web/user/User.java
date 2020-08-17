@@ -22,8 +22,14 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
     @Column(name = "user_id")
     private Long userId;
+=======
+    @Column(name="user_id")
+    private Long userId;
+
+>>>>>>> yoonjung
     @Column(name = "email_id")
     private String emailId;
     @Column(name = "password")

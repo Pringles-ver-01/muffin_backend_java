@@ -34,6 +34,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final com.muffin.web.user.QUser user;
 
+    public final NumberPath<Integer> viewCnt = createNumber("viewCnt", Integer.class);
+
     public QBoard(String variable) {
         this(Board.class, forVariable(variable), INITS);
     }
