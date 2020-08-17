@@ -1,10 +1,6 @@
 package com.muffin.web.user;
 
 import com.muffin.web.asset.Asset;
-import com.muffin.web.board.Board;
-import com.muffin.web.comment.Comment;
-import com.muffin.web.investProfile.InvestProfile;
-import com.muffin.web.news.News;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,7 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private Long userId;
     @Column(name = "email_id")
     private String emailId;
     @Column(name = "password")

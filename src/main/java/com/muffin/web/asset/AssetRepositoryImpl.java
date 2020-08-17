@@ -1,8 +1,5 @@
 package com.muffin.web.asset;
 
-import com.muffin.web.stock.QStock;
-import com.muffin.web.user.QUser;
-import com.muffin.web.util.Box;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.slf4j.Logger;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.muffin.web.asset.QAsset.asset;
@@ -22,6 +20,8 @@ interface IAssetRepository{
     List<Asset> findTransacInfoList();
 
     List<Asset> getTransacList();
+
+    List<Integer> getRecentTotal();
 }
 
 @Repository
@@ -54,17 +54,21 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     @Override
     public List<Asset> getTransacList() {
         logger.info("AssetRepositoryImpl : getTransacList()");
-        QUser user = QUser.user;
-        return queryFactory.select(Projections.fields(Asset.class,
-                asset.assetId,
-                asset.totalAsset,
-                asset.transactionType,
-                asset.transactionDate,
-                asset.purchasePrice,
-                user.id
-                )).from(asset)
-                .innerJoin(user).on(user.id.eq(asset.user.id))
-                .fetchJoin()
+        List<Asset> result = new ArrayList<>();
+        result = queryFactory.selectFrom(asset)
+                .where(asset.user.userId.eq(Long.valueOf(1)))
+                .fetch();
+        return result;
+
+    }
+
+    @Override
+    public List<Integer> getRecentTotal() {
+        logger.info("AssetRepositoryImpl : getRecentTotal()");
+        return queryFactory.select(asset.totalAsset)
+                .from(asset)
+                .where(asset.user.userId.eq(Long.valueOf(1)))
+                .orderBy(asset.transactionDate.asc())
                 .fetch();
     }
 }

@@ -2,7 +2,6 @@ package com.muffin.web.asset;
 
 import com.muffin.web.stock.StockRepository;
 import com.muffin.web.user.UserRepository;
-import com.muffin.web.util.Box;
 import com.muffin.web.util.GenericService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +23,9 @@ interface AssetService extends GenericService<Asset> {
 
     public void readCSV();
 
-    List<Asset> transacList();
+    List<TranscationLogVO> transacList();
+
+    List<Integer> getOnesTotal();
 }
 
 @Service
@@ -33,13 +35,11 @@ public class AssetServiceImpl implements AssetService {
     private final AssetRepository repository;
     private final UserRepository userRepository;
     private final StockRepository stockRepository;
-    private final Box<List<Asset>> assets;
 
-    public AssetServiceImpl(AssetRepository repository, UserRepository userRepository, StockRepository stockRepository, Box<List<Asset>> assets) {
+    public AssetServiceImpl(AssetRepository repository, UserRepository userRepository, StockRepository stockRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.stockRepository = stockRepository;
-        this.assets = assets;
     }
 
     @Override
@@ -73,8 +73,26 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public List<Asset> transacList() {
-        return repository.getTransacList();
+    public List<TranscationLogVO> transacList() {
+        List<TranscationLogVO> result = new ArrayList<>();
+        List<Asset> list = repository.getTransacList();
+        TranscationLogVO vo = null;
+        for(Asset l : list){
+            vo = new TranscationLogVO();
+            vo.setTransactionDate(l.getTransactionDate());
+            vo.setTransactionType(l.getTransactionType());
+            vo.setPurchasePrice(l.getPurchasePrice());
+            vo.setShareCount(l.getShareCount());
+            vo.setTotalAsset(l.getTotalAsset());
+            vo.setStockName(l.getStock().getStockName());
+            result.add(vo);
+        }
+        return result;
+    }
+
+    @Override
+    public List<Integer> getOnesTotal() {
+        return repository.getRecentTotal();
     }
 
     @Override

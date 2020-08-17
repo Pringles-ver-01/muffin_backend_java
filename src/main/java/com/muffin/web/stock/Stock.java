@@ -32,5 +32,4 @@ public class Stock {
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<Asset> assetList = new ArrayList<>();
 
-
 }

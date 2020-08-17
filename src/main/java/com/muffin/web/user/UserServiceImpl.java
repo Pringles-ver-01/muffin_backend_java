@@ -3,6 +3,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import com.muffin.web.util.GenericService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ interface UserService extends GenericService<User> {
 }
 @Service
 public class UserServiceImpl implements UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository repository;
     public UserServiceImpl(UserRepository repository) {
         this.repository = repository;
@@ -25,6 +28,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void readCSV() {
+        logger.info("UserServiceImpl.readCSV()");
         InputStream is = getClass().getResourceAsStream("/static/users.csv");
         try {
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
