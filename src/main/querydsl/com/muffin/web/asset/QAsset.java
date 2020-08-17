@@ -24,9 +24,7 @@ public class QAsset extends EntityPathBase<Asset> {
 
     public final NumberPath<Long> assetId = createNumber("assetId", Long.class);
 
-    public final NumberPath<Integer> priceEarnigsRatio = createNumber("priceEarnigsRatio", Integer.class);
-
-    public final NumberPath<Integer> profitLoss = createNumber("profitLoss", Integer.class);
+    public final NumberPath<Integer> purchasePrice = createNumber("purchasePrice", Integer.class);
 
     public final NumberPath<Integer> shareCount = createNumber("shareCount", Integer.class);
 
