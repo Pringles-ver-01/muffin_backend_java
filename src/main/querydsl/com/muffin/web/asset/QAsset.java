@@ -28,13 +28,13 @@ public class QAsset extends EntityPathBase<Asset> {
 
     public final NumberPath<Integer> shareCount = createNumber("shareCount", Integer.class);
 
-    public final ListPath<com.muffin.web.stock.Stock, com.muffin.web.stock.QStock> stockList = this.<com.muffin.web.stock.Stock, com.muffin.web.stock.QStock>createList("stockList", com.muffin.web.stock.Stock.class, com.muffin.web.stock.QStock.class, PathInits.DIRECT2);
+    public final com.muffin.web.stock.QStock stock;
 
     public final NumberPath<Integer> totalAsset = createNumber("totalAsset", Integer.class);
 
-    public final DateTimePath<java.util.Date> transactionDate = createDateTime("transactionDate", java.util.Date.class);
+    public final StringPath transactionDate = createString("transactionDate");
 
-    public final BooleanPath transactionType = createBoolean("transactionType");
+    public final StringPath transactionType = createString("transactionType");
 
     public final com.muffin.web.user.QUser user;
 
@@ -56,7 +56,8 @@ public class QAsset extends EntityPathBase<Asset> {
 
     public QAsset(Class<? extends Asset> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user"), inits.get("user")) : null;
+        this.stock = inits.isInitialized("stock") ? new com.muffin.web.stock.QStock(forProperty("stock")) : null;
+        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user")) : null;
     }
 
 }

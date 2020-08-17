@@ -1,5 +1,6 @@
 package com.muffin.web.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -7,15 +8,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired UserService userService;
+
 
     @PostMapping("/signUp")
     public void save(@RequestBody User user){
         System.out.println(user);
         userService.save(user);
     }
+
+    @GetMapping("/csv")
+    public void readCsv() {userService.readCSV();}
 }

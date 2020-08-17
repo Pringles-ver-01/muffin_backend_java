@@ -1,10 +1,13 @@
 package com.muffin.web.stock;
 
 import com.muffin.web.asset.Asset;
+import com.muffin.web.board.Board;
 import com.muffin.web.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,21 +19,30 @@ public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_id") private Long stockId;
-    @Column(name = "symbol") private int symbol;
-    @Column(name = "market") private String market;
+    @Column(name = "symbol") private String symbol;
     @Column(name = "stock_name") private String stockName;
+<<<<<<< HEAD
     @Column(name = "category_code") private int categoryCode;
     @Column(name = "category") private String category;
 
     @Builder
     public Stock(int symbol, String market, String stockName, int categoryCode, String category) {
+=======
+
+    @Builder
+    public Stock(String symbol, String stockName, List<Asset> assetList) {
+>>>>>>> origin/yerimm
         this.symbol = symbol;
-        this.market = market;
         this.stockName = stockName;
+<<<<<<< HEAD
         this.categoryCode = categoryCode;
         this.category = category;
+=======
+        this.assetList.addAll(assetList);
+>>>>>>> origin/yerimm
     }
 
-    @ManyToOne @JoinColumn(name="asset_id")
-    private Asset asset;
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    private List<Asset> assetList = new ArrayList<>();
+
 }
