@@ -1,12 +1,23 @@
 package com.muffin.web.user;
-
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import com.muffin.web.util.Box;
 import com.muffin.web.util.GenericService;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Optional;
 
 interface UserService extends GenericService<User> {
 
+    User save(User user);
+
+    Optional<User> findByEmailId(String emailId);
+
+    void readCsv();
 }
 
 @Service
@@ -19,13 +30,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
-        repository.save(user);
+    public User save(User user) {
+        return repository.save(user);
     }
 
     @Override
-    public Optional<User> findById(String id) {
-        return Optional.empty();
+    public Optional<User> findByEmailId(String emailId) {
+        return repository.findByEmailId(emailId);
+    }
+
+    @Override
+    public void readCsv() {
+        InputStream is = getClass().getResourceAsStream("/static/users.csv");
+        try {
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            CSVParser parser = new CSVParser(fileReader, CSVFormat.DEFAULT);
+            Iterable<CSVRecord> csvRecords = parser.getRecords();
+            for(CSVRecord csvRecord : csvRecords) {
+                repository.save(new User(
+                        csvRecord.get(0),
+                        csvRecord.get(1),
+                        csvRecord.get(3),
+                        csvRecord.get(2)
+                ));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return repository.findById(id);
     }
 
     @Override
@@ -39,12 +76,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String id) {
-
+    public void delete(User user) {
+        repository.delete(user);
     }
 
     @Override
-    public boolean exists(String id) {
-        return false;
+    public boolean exists(String emailId) {
+        return repository.existsByEmailId(emailId);
     }
+
+
 }

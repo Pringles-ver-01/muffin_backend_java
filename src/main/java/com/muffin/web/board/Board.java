@@ -1,10 +1,12 @@
 package com.muffin.web.board;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muffin.web.comment.Comment;
 import com.muffin.web.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,10 +24,12 @@ public class Board {
 
     @Column(name = "board_title")
     private String boardTitle;
-    @Column(name="board_content")
+    @Column(name="board_content", length= 8000)
     private String boardContent;
     @Column(name="board_regdate")
     private String boardRegdate;
+    @Column(name="view_cnt")
+    private int viewCnt;
 
     @Override
     public String toString() {
@@ -33,16 +37,18 @@ public class Board {
     }
 
     @Builder
-    public Board(String boardTitle, String boardContent, String boardRegdate) {
+    public Board(String boardTitle, String boardContent, String boardRegdate, int viewCnt, User user, List<Comment> commentList) {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
         this.boardRegdate = boardRegdate;
+        this.viewCnt = viewCnt;
+        this.user = user;
+        this.commentList.addAll(commentList);
     }
 
-    @ManyToOne @JoinColumn(name="user_id")
+    @ManyToOne @JoinColumn(name="user_id") @JsonIgnore
     private User user;
 
-    @OneToMany @JoinColumn(name="comment_id")
-    private List<Comment> commentList;
-
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 }
