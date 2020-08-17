@@ -20,13 +20,7 @@ import java.util.Optional;
 public class Asset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<<<<<<< HEAD
-    @Column(name = "asset_id") private long assetId;
-    @Column(name = "total_asset") private int totalAsset;
-    @Column(name = "transaction_date") private Date transactionDate;
-=======
     @Column(name = "asset_id") private Long assetId;
->>>>>>> origin/yerimm
     @Column(name = "purchase_price") private int purchasePrice;
     @Column(name = "share_count") private int shareCount;
     @Column(name = "total_asset") private int totalAsset;
@@ -34,12 +28,6 @@ public class Asset {
     @Column(name = "transaction_type") private String transactionType;
 
     @Builder
-<<<<<<< HEAD
-    public Asset(int totalAsset, Date transactionDate, int purchasePrice, int shareCount, boolean transactionType) {
-        this.totalAsset = totalAsset;
-        this.transactionDate = transactionDate;
-        this.purchasePrice = purchasePrice;
-=======
     public Asset(int purchasePrice,
                  int shareCount,
                  int totalAsset,
@@ -47,7 +35,6 @@ public class Asset {
                  String transactionType, User user, Stock stock) {
         this.totalAsset = totalAsset;
         this.transactionDate = transactionDate;
->>>>>>> origin/yerimm
         this.shareCount = shareCount;
         this.transactionType = transactionType;
         this.purchasePrice = purchasePrice;
@@ -62,4 +49,3 @@ public class Asset {
     private User user;
 
 }
-

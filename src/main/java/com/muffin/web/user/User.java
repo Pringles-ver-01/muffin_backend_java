@@ -1,13 +1,10 @@
 package com.muffin.web.user;
 
 import com.muffin.web.asset.Asset;
-<<<<<<< HEAD
 import com.muffin.web.board.Board;
 import com.muffin.web.comment.Comment;
 import com.muffin.web.investProfile.InvestProfile;
 import com.muffin.web.news.News;
-=======
->>>>>>> origin/yerimm
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,25 +15,21 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
-@Table(name = "user")
+@Table(name="user")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<<<<<<< HEAD
-    @Column(name = "user_id")
-    private Long userId;
-=======
     @Column(name="user_id")
     private Long userId;
 
->>>>>>> yoonjung
     @Column(name = "email_id")
     private String emailId;
     @Column(name = "password")
     private String password;
-    @Column(name = "nickname")
+    @Column(name="nickname")
     private String nickname;
-    @Column(name = "name")
+    @Column(name="name")
     private String name;
 
     @Override
@@ -53,15 +46,18 @@ public class User {
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Board> boardList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Asset> assetList;
 
-<<<<<<< HEAD
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private InvestProfile investProfile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<News> news;
 
-=======
->>>>>>> origin/yerimm
 }

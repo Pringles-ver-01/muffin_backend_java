@@ -57,7 +57,7 @@ public class QAsset extends EntityPathBase<Asset> {
     public QAsset(Class<? extends Asset> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.stock = inits.isInitialized("stock") ? new com.muffin.web.stock.QStock(forProperty("stock")) : null;
-        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

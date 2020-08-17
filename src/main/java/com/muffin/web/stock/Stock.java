@@ -21,25 +21,12 @@ public class Stock {
     @Column(name = "stock_id") private Long stockId;
     @Column(name = "symbol") private String symbol;
     @Column(name = "stock_name") private String stockName;
-<<<<<<< HEAD
-    @Column(name = "category_code") private int categoryCode;
-    @Column(name = "category") private String category;
-
-    @Builder
-    public Stock(int symbol, String market, String stockName, int categoryCode, String category) {
-=======
 
     @Builder
     public Stock(String symbol, String stockName, List<Asset> assetList) {
->>>>>>> origin/yerimm
         this.symbol = symbol;
         this.stockName = stockName;
-<<<<<<< HEAD
-        this.categoryCode = categoryCode;
-        this.category = category;
-=======
         this.assetList.addAll(assetList);
->>>>>>> origin/yerimm
     }
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)

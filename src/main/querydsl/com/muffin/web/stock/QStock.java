@@ -20,17 +20,7 @@ public class QStock extends EntityPathBase<Stock> {
 
     public static final QStock stock = new QStock("stock");
 
-<<<<<<< HEAD
-    public final com.muffin.web.asset.QAsset asset;
-
-    public final StringPath category = createString("category");
-
-    public final NumberPath<Integer> categoryCode = createNumber("categoryCode", Integer.class);
-
-    public final StringPath market = createString("market");
-=======
     public final ListPath<com.muffin.web.asset.Asset, com.muffin.web.asset.QAsset> assetList = this.<com.muffin.web.asset.Asset, com.muffin.web.asset.QAsset>createList("assetList", com.muffin.web.asset.Asset.class, com.muffin.web.asset.QAsset.class, PathInits.DIRECT2);
->>>>>>> origin/yerimm
 
     public final NumberPath<Long> stockId = createNumber("stockId", Long.class);
 

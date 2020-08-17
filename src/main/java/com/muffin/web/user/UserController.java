@@ -1,10 +1,5 @@
 package com.muffin.web.user;
-<<<<<<< HEAD
-
-import org.springframework.beans.factory.annotation.Autowired;
-=======
 import org.springframework.http.ResponseEntity;
->>>>>>> yoonjung
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -14,11 +9,6 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
-<<<<<<< HEAD
-
-    @Autowired UserService userService;
-
-=======
     private final UserService userService;
     private final MailService mailService;
 
@@ -37,7 +27,6 @@ public class UserController {
         System.out.println(emailId);
         return userService.exists(emailId);
     }
->>>>>>> yoonjung
 
     @PostMapping("/signUp")
     public ResponseEntity<User> save(@RequestBody User user) {
@@ -97,7 +86,4 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    @GetMapping("/csv")
-    public void readCsv() {userService.readCSV();}
 }
