@@ -4,13 +4,11 @@ import com.muffin.web.asset.Asset;
 import com.muffin.web.board.Board;
 import com.muffin.web.comment.Comment;
 import com.muffin.web.investProfile.InvestProfile;
-import com.muffin.web.news.News;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -31,6 +29,10 @@ public class User {
     private String nickname;
     @Column(name="name")
     private String name;
+
+    public User() {
+
+    }
 
     @Override
     public String toString() {
@@ -57,7 +59,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private InvestProfile investProfile;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<News> news;
+
+
 
 }

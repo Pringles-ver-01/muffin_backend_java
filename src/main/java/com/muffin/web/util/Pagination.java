@@ -26,4 +26,5 @@ public class Pagination {
         this.prev = range != 1;
         this.next = endPage <= pageCnt;
     }
+
 }
