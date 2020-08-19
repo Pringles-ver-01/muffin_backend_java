@@ -13,13 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.muffin.web.asset.QAsset.asset;
+import static com.muffin.web.stock.QStock.stock;
+import static com.muffin.web.user.QUser.user;
 
 interface IAssetRepository{
     Asset showOneData();
 
     List<Asset> findTransacInfoList();
 
-    List<Asset> getTransacList();
+    List<Asset> getTransacList(Long userId);
 
     List<Integer> getRecentTotal();
 
@@ -55,13 +57,23 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     }
 
     @Override
-    public List<Asset> getTransacList() {
+    public List<Asset> getTransacList(Long userId) {
         logger.info("AssetRepositoryImpl : getTransacList()");
-        List<Asset> result = new ArrayList<>();
-        result = queryFactory.selectFrom(asset)
-                .where(asset.user.userId.eq(Long.valueOf(1)))
+        return queryFactory.select(Projections.fields(Asset.class,
+                asset.purchasePrice,
+                asset.shareCount,
+                asset.totalAsset,
+                asset.assetId,
+                asset.transactionDate,
+                asset.transactionType,
+                stock,
+                user))
+                .from(asset)
+                .innerJoin(user).on(asset.user.userId.eq(user.userId))
+                .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
+                .fetchJoin()
+                .where(asset.user.userId.eq(userId))
                 .fetch();
-        return result;
     }
 
     @Override
@@ -74,8 +86,5 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .limit(1)
                 .fetch();
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 }

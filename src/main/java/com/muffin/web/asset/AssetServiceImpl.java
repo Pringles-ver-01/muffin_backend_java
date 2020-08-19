@@ -23,11 +23,11 @@ interface AssetService extends GenericService<Asset> {
 
     public void readCSV();
 
-    List<TranscationLogVO> transacList();
+    List<TranscationLogVO> transacList(Long userId);
 
-    List<Integer> getOnesTotal();
+    List<Integer> getOnesTotal(Long userId);
 
-    List<TranscationLogVO> getOnesHoldings();
+    List<TranscationLogVO> getOnesHoldings(Long userId);
 }
 
 @Service
@@ -75,9 +75,9 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public List<TranscationLogVO> transacList() {
+    public List<TranscationLogVO> transacList(Long userId) {
         List<TranscationLogVO> result = new ArrayList<>();
-        List<Asset> list = repository.getTransacList();
+        List<Asset> list = repository.getTransacList(userId);
         TranscationLogVO vo = null;
         for(Asset l : list){
             vo = new TranscationLogVO();
@@ -87,22 +87,22 @@ public class AssetServiceImpl implements AssetService {
             vo.setShareCount(l.getShareCount());
             vo.setTotalAsset(l.getTotalAsset());
             vo.setStockName(l.getStock().getStockName());
+            vo.setUserId(l.getUser().getUserId());
             result.add(vo);
         }
         return result;
     }
 
     @Override
-    public List<Integer> getOnesTotal() {
+    public List<Integer> getOnesTotal(Long userId) {
         return repository.getRecentTotal();
     }
 
-<<<<<<< HEAD
     @Override
-    public List<TranscationLogVO> getOnesHoldings() {
+    public List<TranscationLogVO> getOnesHoldings(Long userId) {
         //shareCount가 0이면 안돼!
         List<TranscationLogVO> result = new ArrayList<>();
-        List<Asset> list = repository.getTransacList();
+        List<Asset> list = repository.getTransacList(userId);
         TranscationLogVO vo = null;
 
         for(Asset l : list) {
@@ -127,17 +127,7 @@ public class AssetServiceImpl implements AssetService {
         return result;
     }
 
-    @Override
-    public void save(Asset asset) { }
-=======
-//    @Override
-//    public void save(Asset asset) { }
-//
-//    @Override
-//    public Optional<Asset> findById(String id) {
-//        return Optional.empty();
-//    }
->>>>>>> master
+
 
     @Override
     public Optional<Asset> findById(Long id) {

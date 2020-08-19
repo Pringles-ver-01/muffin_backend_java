@@ -23,12 +23,17 @@ import org.jsoup.select.Elements;
 
 interface StockService extends GenericService<Stock> {
 
+    Optional<Stock> findById(String id);
+
+    void save(Stock stock);
+
     void readCSV();
 
     CrawledStockVO stockCrawling(String stockCode);
 
     List<CrawledStockVO> allStock();
 
+    CrawledStockVO getOneStock(String symbol);
 }
 
 @Service
@@ -40,25 +45,13 @@ class StockServiceImpl implements StockService{
         this.repository = repository;
     }
 
-<<<<<<< HEAD
     @Override
-    public void save(Stock stock) {}
+    public void save(Stock stock) { }
 
     @Override
     public Optional<Stock> findById(String id) {
         return Optional.empty();
     }
-=======
-//    @Override
-//    public void save(Stock stock) {
-//
-//    }
-//
-//    @Override
-//    public Optional<Stock> findById(String id) {
-//        return Optional.empty();
-//    }
->>>>>>> master
 
     public Optional<Stock> findById(Long id) {
         return Optional.empty();
@@ -75,18 +68,8 @@ class StockServiceImpl implements StockService{
     }
 
     @Override
-<<<<<<< HEAD
-    public void delete(String id) { }
-=======
-    public void delete(Stock stock) {
+    public void delete(Stock stock) { }
 
-    }
->>>>>>> master
-
-//    @Override
-//    public void delete(String id) {
-//
-//    }
 
     @Override
     public boolean exists(String id) {
@@ -126,10 +109,18 @@ class StockServiceImpl implements StockService{
         return t;
     }
 
+    @Override
+    public CrawledStockVO getOneStock(String symbol) {
+        logger.info("StockServiceImpl : CrawledStockVO getOneStock(String " + symbol +" )");
+        logger.info("~~~~~~~~~~"+symbol+"~~~~~~~~~~");
+        CrawledStockVO vo = stockCrawling(symbol);
+        return vo;
+    }
+
 
     @Override
     public CrawledStockVO stockCrawling(String stockCode) {
-        logger.info("StockServiceImpl : allStockCrawling()");
+        logger.info("StockServiceImpl : stockCrawling( "+ stockCode +" )");
         CrawledStockVO vo = null;
             try {
                 String url = "https://finance.naver.com/item/main.nhn?code=" + stockCode;
@@ -137,7 +128,7 @@ class StockServiceImpl implements StockService{
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
                         .execute();
                 Document d = homepage.parse();
-                Elements stockName = d.select("div.wrap_company");
+
                 Elements symbol = d.select("span.code");
 
                 Elements table = d.select("table.no_info");
@@ -169,9 +160,11 @@ class StockServiceImpl implements StockService{
 
                 Elements capital = d.select("#_market_sum");
 
+                String stockName = repository.findBySymbol(stockCode);
+                logger.info(stockName);
                 for(int i = 0; i < symbol.size(); i++) {
                     vo = new CrawledStockVO();
-//                vo.setStockName(stockName.get(i).text());
+                    vo.setStockName(stockName);
                     vo.setSymbol(symbol.get(i).text());
                     vo.setNow(nowBlind.get(i).text());
                     vo.setHigh(highBlind.get(i).text());

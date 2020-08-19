@@ -28,31 +28,32 @@ public class AssetController {
         return assetService.showData();
     }
 
-    @GetMapping("/transactionlog")
-    public List<TranscationLogVO> getTransacDetail() {
+    @GetMapping("/transactionlog/{userId}")
+    public List<TranscationLogVO> getTransacDetail(@PathVariable Long userId) {
         logger.info("/transaction_list");
-        List<TranscationLogVO> logs = assetService.transacList();
+        List<TranscationLogVO> logs = assetService.transacList(userId);
         return logs;
     }
 
-    @GetMapping("/total")
-    public HashMap totalAsset() {
+    @GetMapping("/total/{userId}")
+    public HashMap totalAsset(@PathVariable Long userId) {
         logger.info("/total");
         box.clear();
-        box.put("totalAsset", assetService.getOnesTotal());
+        box.put("totalAsset", assetService.getOnesTotal(userId));
         box.put("tatalRatio", 999);
         box.put("totalProfit", 999);
         return box.get();
     }
 
-    @GetMapping("/holdingCount")
-    public HashMap getHoling() {
+    @GetMapping("/holdingCount/{userId}")
+    public HashMap getHoling(@PathVariable Long userId) {
         logger.info("/holingCount");
         box.clear();
-        box.put("holdingCount", assetService.transacList());
+        box.put("holdingCount", assetService.transacList(userId));
         box.put("profitLoss", 999);
         box.put("nowPrice", 999);
         return box.get();
     }
+
 
 }

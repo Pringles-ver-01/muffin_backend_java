@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void readCsv() {
-        InputStream is = getClass().getResourceAsStream("/static/users.csv");
+        InputStream is = getClass().getResourceAsStream("/static/user - 시트1 (1).csv");
         try {
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             CSVParser parser = new CSVParser(fileReader, CSVFormat.DEFAULT);

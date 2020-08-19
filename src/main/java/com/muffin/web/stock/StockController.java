@@ -4,10 +4,7 @@ import com.muffin.web.util.Box;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +26,12 @@ public class StockController {
     public List<CrawledStockVO> getStockPrice() {
         logger.info("/stockCrawling");
         return  stockService.allStock();
+    }
+
+    @GetMapping("/{symbol}")
+    public CrawledStockVO getStockDetail(@PathVariable String symbol) {
+        logger.info("/stocks/{stockId}");
+        return stockService.getOneStock(symbol);
     }
 
 //    @GetMapping("/candles")

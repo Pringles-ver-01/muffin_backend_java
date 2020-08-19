@@ -14,6 +14,8 @@ import static com.muffin.web.stock.QStock.stock;
 interface IStockRepository {
 
     List<String> findAllSymbol();
+
+    String findBySymbol(String symbol);
 }
 
 @Repository
@@ -37,4 +39,12 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
                 .from(stock)
                 .fetch();
     }
+
+    @Override
+    public String findBySymbol(String symbol) {
+        return queryFactory.select(stock.stockName)
+                .from(stock)
+                .fetchFirst();
+    }
 }
+//035720
