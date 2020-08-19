@@ -26,6 +26,8 @@ interface AssetService extends GenericService<Asset> {
     List<TranscationLogVO> transacList();
 
     List<Integer> getOnesTotal();
+
+    List<TranscationLogVO> getOnesHoldings();
 }
 
 @Service
@@ -93,6 +95,35 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public List<Integer> getOnesTotal() {
         return repository.getRecentTotal();
+    }
+
+    @Override
+    public List<TranscationLogVO> getOnesHoldings() {
+        //shareCount가 0이면 안돼!
+        List<TranscationLogVO> result = new ArrayList<>();
+        List<Asset> list = repository.getTransacList();
+        TranscationLogVO vo = null;
+
+        for(Asset l : list) {
+            if(l.getShareCount() > 0) {
+                vo = new TranscationLogVO();
+                vo.setStockName(l.getStock().getStockName());
+                vo.setSymbol(l.getStock().getSymbol());
+                vo.setShareCount(l.getShareCount());
+                vo.setPurchasePrice(l.getPurchasePrice());
+                vo.setProfitLoss(999);
+                vo.setProfitRatio(999);
+                vo.setEvaluatedSum(999);
+                vo.setHasAsset(true);
+                result.add(vo);
+            } else {
+                vo = new TranscationLogVO();
+                vo.setHasAsset(false);
+                result.add(vo);
+            }
+        }
+
+        return result;
     }
 
     @Override

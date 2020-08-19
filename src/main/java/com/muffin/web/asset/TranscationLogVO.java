@@ -4,6 +4,7 @@ import lombok.*;
 
 @Getter @Setter @ToString
 public class TranscationLogVO {
-    private String transactionDate, transactionType, stockName;
-    private int purchasePrice, shareCount, totalAsset;
+    private String transactionDate, transactionType, stockName, symbol;
+    private int purchasePrice, shareCount, totalAsset, profitLoss, profitRatio, evaluatedSum;
+    private boolean hasAsset;
 }

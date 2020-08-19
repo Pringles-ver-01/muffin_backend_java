@@ -45,4 +45,14 @@ public class AssetController {
         return box.get();
     }
 
+    @GetMapping("/holdingCount")
+    public HashMap getHoling() {
+        logger.info("/holingCount");
+        box.clear();
+        box.put("holdingCount", assetService.transacList());
+        box.put("profitLoss", 999);
+        box.put("nowPrice", 999);
+        return box.get();
+    }
+
 }

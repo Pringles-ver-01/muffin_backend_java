@@ -22,6 +22,7 @@ interface IAssetRepository{
     List<Asset> getTransacList();
 
     List<Integer> getRecentTotal();
+
 }
 
 @Repository
@@ -48,7 +49,9 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     @Override
     public List<Asset> findTransacInfoList() {
         logger.info("findTransacInfoList()");
-        return queryFactory.selectFrom(asset).fetch();
+        return queryFactory.selectFrom(asset)
+                .where(asset.user.userId.eq(Long.valueOf(1)))
+                .fetch();
     }
 
     @Override
@@ -59,7 +62,6 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .where(asset.user.userId.eq(Long.valueOf(1)))
                 .fetch();
         return result;
-
     }
 
     @Override
@@ -69,6 +71,8 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .from(asset)
                 .where(asset.user.userId.eq(Long.valueOf(1)))
                 .orderBy(asset.transactionDate.asc())
+                .limit(1)
                 .fetch();
     }
+
 }
