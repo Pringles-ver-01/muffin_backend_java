@@ -40,6 +40,7 @@ class StockServiceImpl implements StockService{
         this.repository = repository;
     }
 
+<<<<<<< HEAD
     @Override
     public void save(Stock stock) {}
 
@@ -47,6 +48,17 @@ class StockServiceImpl implements StockService{
     public Optional<Stock> findById(String id) {
         return Optional.empty();
     }
+=======
+//    @Override
+//    public void save(Stock stock) {
+//
+//    }
+//
+//    @Override
+//    public Optional<Stock> findById(String id) {
+//        return Optional.empty();
+//    }
+>>>>>>> master
 
     public Optional<Stock> findById(Long id) {
         return Optional.empty();
@@ -63,7 +75,18 @@ class StockServiceImpl implements StockService{
     }
 
     @Override
+<<<<<<< HEAD
     public void delete(String id) { }
+=======
+    public void delete(Stock stock) {
+
+    }
+>>>>>>> master
+
+//    @Override
+//    public void delete(String id) {
+//
+//    }
 
     @Override
     public boolean exists(String id) {

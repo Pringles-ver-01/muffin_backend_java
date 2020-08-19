@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;
@@ -10,3 +9,15 @@ spring:
     hibernate:
       ddl-auto: create
     # Hibernate ddl auto (create, create-drop, validate, update)
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: angellachoi0709@gmail.com
+    password: nfwistcfjnmyfkqe
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

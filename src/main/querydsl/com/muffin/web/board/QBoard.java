@@ -34,6 +34,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final com.muffin.web.user.QUser user;
 
+    public final NumberPath<Integer> viewCnt = createNumber("viewCnt", Integer.class);
+
     public QBoard(String variable) {
         this(Board.class, forVariable(variable), INITS);
     }
@@ -52,7 +54,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public QBoard(Class<? extends Board> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.muffin.web.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.muffin.web.comment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muffin.web.board.Board;
 import com.muffin.web.user.User;
 import lombok.*;
@@ -31,14 +32,16 @@ public class Comment {
     }
 
     @Builder
-    public Comment(String commentContent, String commentRegdate) {
+    public Comment(String commentContent, String commentRegdate, User user, Board board) {
         this.commentContent = commentContent;
         this.commentRegdate = commentRegdate;
+        this.user = user;
+        this.board = board;
     }
 
-    @ManyToOne @JoinColumn(name="user_id")
+    @ManyToOne @JoinColumn(name="user_id") @JsonIgnore
     private User user;
 
-    @ManyToOne @JoinColumn(name="board_id")
+    @ManyToOne @JoinColumn(name="board_id") @JsonIgnore
     private Board board;
 }

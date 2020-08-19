@@ -1,5 +1,6 @@
 package com.muffin.web.investProfile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muffin.web.user.User;
 import lombok.*;
 
@@ -19,12 +20,13 @@ public class InvestProfile {
     @Column(name="investment_propensity") private String investmentPropensity;
 
     @Builder
-    public InvestProfile(String investmentPeriod, String investmentPropensity) {
+    public InvestProfile(String investmentPeriod, String investmentPropensity, User user) {
         this.investmentPeriod = investmentPeriod;
         this.investmentPropensity = investmentPropensity;
+        this.user = user;
     }
 
-    @OneToOne @JoinColumn(name="user_id")
+    @OneToOne @JoinColumn(name="user_id") @JsonIgnore
     private User user;
 
 }

@@ -97,6 +97,7 @@ public class AssetServiceImpl implements AssetService {
         return repository.getRecentTotal();
     }
 
+<<<<<<< HEAD
     @Override
     public List<TranscationLogVO> getOnesHoldings() {
         //shareCount가 0이면 안돼!
@@ -128,9 +129,18 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public void save(Asset asset) { }
+=======
+//    @Override
+//    public void save(Asset asset) { }
+//
+//    @Override
+//    public Optional<Asset> findById(String id) {
+//        return Optional.empty();
+//    }
+>>>>>>> master
 
     @Override
-    public Optional<Asset> findById(String id) {
+    public Optional<Asset> findById(Long id) {
         return Optional.empty();
     }
 
@@ -145,7 +155,9 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public void delete(String id) { }
+    public void delete(Asset asset) {
+
+    }
 
     @Override
     public boolean exists(String id) {

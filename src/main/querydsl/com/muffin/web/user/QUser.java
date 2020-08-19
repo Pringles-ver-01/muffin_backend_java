@@ -18,13 +18,23 @@ public class QUser extends EntityPathBase<User> {
 
     private static final long serialVersionUID = -733150272L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QUser user = new QUser("user");
 
     public final ListPath<com.muffin.web.asset.Asset, com.muffin.web.asset.QAsset> assetList = this.<com.muffin.web.asset.Asset, com.muffin.web.asset.QAsset>createList("assetList", com.muffin.web.asset.Asset.class, com.muffin.web.asset.QAsset.class, PathInits.DIRECT2);
 
+    public final ListPath<com.muffin.web.board.Board, com.muffin.web.board.QBoard> boardList = this.<com.muffin.web.board.Board, com.muffin.web.board.QBoard>createList("boardList", com.muffin.web.board.Board.class, com.muffin.web.board.QBoard.class, PathInits.DIRECT2);
+
+    public final ListPath<com.muffin.web.comment.Comment, com.muffin.web.comment.QComment> commentList = this.<com.muffin.web.comment.Comment, com.muffin.web.comment.QComment>createList("commentList", com.muffin.web.comment.Comment.class, com.muffin.web.comment.QComment.class, PathInits.DIRECT2);
+
     public final StringPath emailId = createString("emailId");
 
+    public final com.muffin.web.investProfile.QInvestProfile investProfile;
+
     public final StringPath name = createString("name");
+
+    public final ListPath<com.muffin.web.news.News, com.muffin.web.news.QNews> news = this.<com.muffin.web.news.News, com.muffin.web.news.QNews>createList("news", com.muffin.web.news.News.class, com.muffin.web.news.QNews.class, PathInits.DIRECT2);
 
     public final StringPath nickname = createString("nickname");
 
@@ -33,15 +43,24 @@ public class QUser extends EntityPathBase<User> {
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public QUser(String variable) {
-        super(User.class, forVariable(variable));
+        this(User.class, forVariable(variable), INITS);
     }
 
     public QUser(Path<? extends User> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QUser(PathMetadata metadata) {
-        super(User.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QUser(PathMetadata metadata, PathInits inits) {
+        this(User.class, metadata, inits);
+    }
+
+    public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.investProfile = inits.isInitialized("investProfile") ? new com.muffin.web.investProfile.QInvestProfile(forProperty("investProfile"), inits.get("investProfile")) : null;
     }
 
 }
