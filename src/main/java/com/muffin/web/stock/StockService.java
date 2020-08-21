@@ -1,5 +1,6 @@
 package com.muffin.web.stock;
 import com.muffin.web.util.GenericService;
+import com.muffin.web.util.Pagination;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -20,8 +21,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-interface StockService extends GenericService<Stock> {
+ public interface StockService extends GenericService<Stock> {
 
     Optional<Stock> findById(String id);
 
@@ -29,15 +29,14 @@ interface StockService extends GenericService<Stock> {
 
     void readCSV();
 
-    CrawledStockVO stockCrawling(String stockCode);
-
     List<CrawledStockVO> allStock();
 
     CrawledStockVO getOneStock(String symbol);
+
+     List<CrawledStockVO> pagination(Pagination pagination);
 }
 
-@Service
-class StockServiceImpl implements StockService{
+@Service class StockServiceImpl implements StockService{
     private static final Logger logger = LoggerFactory.getLogger(StockServiceImpl.class);
     private final StockRepository repository;
 
@@ -64,7 +63,7 @@ class StockServiceImpl implements StockService{
 
     @Override
     public int count() {
-        return 0;
+        return (int)repository.count();
     }
 
     @Override
@@ -100,26 +99,28 @@ class StockServiceImpl implements StockService{
     @Override
     public List<CrawledStockVO> allStock() {
         logger.info("StockServiceImpl : allStock()");
-        List<CrawledStockVO> t =  new ArrayList<>();
-        List<String> listedSymbols = repository.findAllSymbol();
-
-        for(String stockCode: listedSymbols){
-            t.add(stockCrawling(stockCode)) ;
+        List<CrawledStockVO> cralwedResults =  new ArrayList<>();
+//        List<String> listedSymbols = repository.findAllSymbol();
+//        for(String stockCode: listedSymbols){
+//            t.add(stockCrawling(stockCode)) ;
+//        }
+        List<String> miniListed = repository.findMiniListed();
+        for(String stockCode : miniListed) {
+            cralwedResults.add(stockCrawling(stockCode));
         }
-        return t;
+
+        return cralwedResults;
     }
 
     @Override
     public CrawledStockVO getOneStock(String symbol) {
         logger.info("StockServiceImpl : CrawledStockVO getOneStock(String " + symbol +" )");
-        logger.info("~~~~~~~~~~"+symbol+"~~~~~~~~~~");
         CrawledStockVO vo = stockCrawling(symbol);
         return vo;
     }
 
 
-    @Override
-    public CrawledStockVO stockCrawling(String stockCode) {
+    private CrawledStockVO stockCrawling(String stockCode) {
         logger.info("StockServiceImpl : stockCrawling( "+ stockCode +" )");
         CrawledStockVO vo = null;
             try {
@@ -129,30 +130,34 @@ class StockServiceImpl implements StockService{
                         .execute();
                 Document d = homepage.parse();
 
+                Elements getName = d.select("div.wrap_company");
+                Elements getH2 = getName.select("h2");
+                Elements stockName = getH2.select("a");
+
                 Elements symbol = d.select("span.code");
 
                 Elements table = d.select("table.no_info");
                 Elements trs = table.select("tr");
-                Element first_tr = trs.get(0);
-                Elements first_tr_tds = first_tr.select("td");
-                Element first_tr_tds_first_td = first_tr_tds.get(0);
-                Element first_tr_tds_second_td = first_tr_tds.get(1);
-                Element first_tr_tds_third_td = first_tr_tds.get(2);
+                Element firstTr = trs.get(0);
+                Elements firstTrTds = firstTr.select("td");
+                Element high = firstTrTds.get(0);
+                Element close = firstTrTds.get(1);
+                Element volume = firstTrTds.get(2);
 
-                Element second_tr = trs.get(1);
-                Elements second_tr_tds = second_tr.select("td");
-                Element second_tr_tds_first_td = second_tr_tds.get(0);
-                Element second_tr_tds_second_td = second_tr_tds.get(1);
-                Element second_tr_tds_third_td = second_tr_tds.get(2);
+                Element secondTr = trs.get(1);
+                Elements secondTrTds = secondTr.select("td");
+                Element open = secondTrTds.get(0);
+                Element low = secondTrTds.get(1);
+                Element transacAmount = secondTrTds.get(2);
 
                 Elements now = d.select("p.no_today");
                 Elements nowBlind = now.select("span.blind");
-                Elements openBlind = second_tr_tds_first_td.select("span.blind");
-                Elements highBlind = first_tr_tds_second_td.select("span.blind");
-                Elements lowBlind = second_tr_tds_second_td.select("span.blind");
-                Elements closeBlind = first_tr_tds_first_td.select("span.blind");
-                Elements volume = first_tr_tds_third_td.select("span.blind");
-                Elements transacAmount = second_tr_tds_third_td.select("span.blind");
+                Elements openBlind = open.select("span.blind");
+                Elements highBlind = high.select("span.blind");
+                Elements lowBlind = low.select("span.blind");
+                Elements closeBlind = close.select("span.blind");
+                Elements volumeBlind = volume.select("span.blind");
+                Elements transacAmountBlind = transacAmount.select("span.blind");
                 Elements crawledDate = d.select("#time");
 
                 Elements dod = d.select("p.no_exday");
@@ -160,20 +165,18 @@ class StockServiceImpl implements StockService{
 
                 Elements capital = d.select("#_market_sum");
 
-                String stockName = repository.findBySymbol(stockCode);
-                logger.info(stockName);
                 for(int i = 0; i < symbol.size(); i++) {
                     vo = new CrawledStockVO();
-                    vo.setStockName(stockName);
+                    vo.setStockName(stockName.get(i).text());
                     vo.setSymbol(symbol.get(i).text());
                     vo.setNow(nowBlind.get(i).text());
                     vo.setHigh(highBlind.get(i).text());
                     vo.setLow(lowBlind.get(i).text());
                     vo.setOpen(openBlind.get(i).text());
                     vo.setClose(closeBlind.get(i).text());
-                    vo.setVolume(volume.get(i).text());
+                    vo.setVolume(volumeBlind.get(i).text());
                     vo.setDate(crawledDate.get(i).text());
-                    vo.setTransacAmount(transacAmount.get(i).text());
+                    vo.setTransacAmount(transacAmountBlind.get(i).text());
                     vo.setDod(dodblind.get(i).text());
                     vo.setCapital(capital.get(i).text());
                 }
@@ -182,6 +185,21 @@ class StockServiceImpl implements StockService{
             }
 
         return vo;
+    }
+
+    @Override
+    public List<CrawledStockVO> pagination(Pagination pagination) {
+        List<CrawledStockVO> result = new ArrayList<>();
+        List<Stock> crawledStock= repository.pagination(pagination);
+        return getStocksVOS(result, crawledStock);
+    }
+
+    private List<CrawledStockVO> getStocksVOS(List<CrawledStockVO> result,  Iterable<Stock> crawledStock) {
+        List<String> miniListed = repository.findMiniListed();
+        for(String stockCode : miniListed) {
+            result.add(stockCrawling(stockCode));
+        }
+        return result;
     }
 
 }

@@ -23,7 +23,11 @@ public class Pagination {
         this.startPage = (range-1) * rangeSize + 1;
         this.endPage = range * rangeSize;
         this.startList = (page - 1) * listSize;
-        this.prev = range != 1;
-        this.next = endPage <= pageCnt;
+        this.prev = range == 1 ? false : true;
+        this.next = endPage > pageCnt ? false : true;
+        if(this.endPage > this.pageCnt){
+            this.endPage = this.pageCnt;
+            this.next = false;
+        }
     }
 }

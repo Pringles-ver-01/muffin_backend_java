@@ -1,5 +1,7 @@
 package com.muffin.web.asset;
 
+import com.amazonaws.services.alexaforbusiness.model.BusinessReportRecurrence;
+import com.muffin.web.util.Pagination;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.slf4j.Logger;
@@ -19,12 +21,13 @@ import static com.muffin.web.user.QUser.user;
 interface IAssetRepository{
     Asset showOneData();
 
-    List<Asset> findTransacInfoList();
+//    List<Asset> getTransacList(Long userId);
 
-    List<Asset> getTransacList(Long userId);
+    List<Integer> getRecentTotal(Long userId);
 
-    List<Integer> getRecentTotal();
+    List<Asset> getHolingStocks(Long userId);
 
+    List<Asset> pagination(Pagination pagination);
 }
 
 @Repository
@@ -48,17 +51,30 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 asset.shareCount, asset.totalAsset)).from(asset).fetchOne();
     }
 
-    @Override
-    public List<Asset> findTransacInfoList() {
-        logger.info("findTransacInfoList()");
-        return queryFactory.selectFrom(asset)
-                .where(asset.user.userId.eq(Long.valueOf(1)))
-                .fetch();
-    }
+
+//    @Override
+//    public List<Asset> getTransacList(Long userId) {
+//        logger.info("AssetRepositoryImpl : getTransacList()");
+//        return queryFactory.select(Projections.fields(Asset.class,
+//                asset.purchasePrice,
+//                asset.shareCount,
+//                asset.totalAsset,
+//                asset.assetId,
+//                asset.transactionDate,
+//                asset.transactionType,
+//                stock,
+//                user))
+//                .from(asset)
+//                .innerJoin(user).on(asset.user.userId.eq(user.userId))
+//                .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
+//                .fetchJoin()
+//                .where(asset.user.userId.eq(userId))
+//                .fetch();
+//    }
 
     @Override
-    public List<Asset> getTransacList(Long userId) {
-        logger.info("AssetRepositoryImpl : getTransacList()");
+    public List<Asset> getHolingStocks(Long userId){
+        logger.info("AssetRepositoryImpl : getHolingStocks()");
         return queryFactory.select(Projections.fields(Asset.class,
                 asset.purchasePrice,
                 asset.shareCount,
@@ -67,8 +83,7 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 asset.transactionDate,
                 asset.transactionType,
                 stock,
-                user))
-                .from(asset)
+                user)).from(asset)
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
                 .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
                 .fetchJoin()
@@ -77,11 +92,18 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     }
 
     @Override
-    public List<Integer> getRecentTotal() {
+    public List<Asset> pagination(Pagination pagination) {
+        System.out.println(pagination);
+        return queryFactory.selectFrom(asset).orderBy(asset.transactionDate.desc())
+                .offset(pagination.getStartList()).limit(pagination.getListSize()).fetch();
+    }
+
+    @Override
+    public List<Integer> getRecentTotal(Long userId) {
         logger.info("AssetRepositoryImpl : getRecentTotal()");
         return queryFactory.select(asset.totalAsset)
                 .from(asset)
-                .where(asset.user.userId.eq(Long.valueOf(1)))
+                .where(asset.user.userId.eq(user.userId))
                 .orderBy(asset.transactionDate.asc())
                 .limit(1)
                 .fetch();
