@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @ToString
 public class BoardVO {
-    private Long id, userId;
+    private Long boardId, userId;
     private String boardTitle, boardContent, boardRegdate, nickname;
     private int viewCnt;
     private User user;

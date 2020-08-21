@@ -25,5 +25,8 @@ public class Pagination {
         this.startList = (page - 1) * listSize;
         this.prev = range != 1;
         this.next = endPage <= pageCnt;
+        if(this.endPage > this.pageCnt){
+            this.endPage = this.pageCnt;
+        }
     }
 }

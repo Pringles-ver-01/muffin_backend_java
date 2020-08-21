@@ -1,8 +1,11 @@
 package com.muffin.web.asset;
 
 import com.muffin.web.stock.StockRepository;
+import com.muffin.web.stock.StockService;
 import com.muffin.web.user.UserRepository;
 import com.muffin.web.util.GenericService;
+import com.muffin.web.util.Pagination;
+import lombok.AllArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -23,11 +26,17 @@ interface AssetService extends GenericService<Asset> {
 
     public void readCSV();
 
-    List<TranscationLogVO> transacList();
+//    List<TranscationLogVO> transacList(Long userId);
 
-    List<Integer> getOnesTotal();
+    List<Integer> getOnesTotal(Long userId);
+
+    List<TranscationLogVO> getOnesHoldings(Long userId);
+
+    List<TranscationLogVO> pagination(Pagination pagination);
+
+    Optional<Asset> findById(Long id);
 }
-
+@AllArgsConstructor
 @Service
 public class AssetServiceImpl implements AssetService {
 
@@ -35,12 +44,8 @@ public class AssetServiceImpl implements AssetService {
     private final AssetRepository repository;
     private final UserRepository userRepository;
     private final StockRepository stockRepository;
+    private final StockService stockService;
 
-    public AssetServiceImpl(AssetRepository repository, UserRepository userRepository, StockRepository stockRepository) {
-        this.repository = repository;
-        this.userRepository = userRepository;
-        this.stockRepository = stockRepository;
-    }
 
     @Override
     public Asset showData() {
@@ -51,7 +56,7 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public void readCSV(){
         logger.info("AssetServiceImpl : readCSV()");
-        InputStream is = getClass().getResourceAsStream("/static/assets_log.csv");
+        InputStream is = getClass().getResourceAsStream("/static/거래내역1 - 시트1 (6).csv");
         try {
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT);
@@ -72,36 +77,116 @@ public class AssetServiceImpl implements AssetService {
         }
     }
 
+//    @Override
+//    public List<TranscationLogVO> transacList(Long userId) {
+//        List<TranscationLogVO> result = new ArrayList<>();
+//        List<Asset> list = repository.getTransacList(userId);
+//        TranscationLogVO vo = null;
+//
+//        for(Asset l : list){
+//            vo = new TranscationLogVO();
+//            vo.setTransactionDate(l.getTransactionDate());
+//            vo.setTransactionType(l.getTransactionType());
+//            vo.setPurchasePrice(l.getPurchasePrice());
+//            vo.setShareCount(l.getShareCount());
+//            vo.setTotalAsset(l.getTotalAsset());
+//            vo.setStockName(l.getStock().getStockName());
+//            vo.setUserId(l.getUser().getUserId());
+//            result.add(vo);
+//        }
+//        return result;
+//    }
+
+    private void calculrateTotalProfit(Long userId, String symbol) {
+        calculrateProfit(userId, symbol).get(1);
+    }
+
     @Override
-    public List<TranscationLogVO> transacList() {
+    public List getOnesTotal(Long userId) {
+        List result = new ArrayList();
+
+        result.add(repository.getRecentTotal(userId));
+        return result;
+    }
+
+    private List calculrateProfit(Long userId, String symbol) {
+        List result = new ArrayList();
+        logger.info("...calculrating... oneStock... profit...");
+
+        Integer nowPrice = Integer.parseInt(stockService.getOneStock(symbol).getNow().replaceAll(",",""));
+        List<Integer> purchaseShares = new ArrayList<>();
+        List<Asset> list = repository.getHolingStocks(userId);
+        for(Asset l : list) {
+            purchaseShares.add(l.getPurchasePrice());
+            purchaseShares.add(l.getShareCount());
+        }
+
+        int resultEvaluatedSum = nowPrice * purchaseShares.get(1);
+        int myShares = purchaseShares.get(0) * purchaseShares.get(1);
+        int resultProfitLoss = nowPrice * purchaseShares.get(1)  - myShares;
+        double resultProfitRatio =  (double)Math.round((double)resultProfitLoss / (double)myShares * 10000) / 100;
+
+        result.add(resultEvaluatedSum);
+        result.add(resultProfitLoss);
+        result.add(resultProfitRatio);
+        result.add(nowPrice);
+        return result;
+    }
+
+
+    @Override
+    public List<TranscationLogVO> getOnesHoldings(Long userId) {
+        //shareCount가 0이면 보이지 않는다!!!
         List<TranscationLogVO> result = new ArrayList<>();
-        List<Asset> list = repository.getTransacList();
+        List<Asset> list = repository.getHolingStocks(userId);
         TranscationLogVO vo = null;
-        for(Asset l : list){
-            vo = new TranscationLogVO();
-            vo.setTransactionDate(l.getTransactionDate());
-            vo.setTransactionType(l.getTransactionType());
-            vo.setPurchasePrice(l.getPurchasePrice());
-            vo.setShareCount(l.getShareCount());
-            vo.setTotalAsset(l.getTotalAsset());
-            vo.setStockName(l.getStock().getStockName());
-            result.add(vo);
+
+        for(Asset l : list) {
+            if(l.getShareCount() > 0) {
+                vo = new TranscationLogVO();
+                vo.setStockName(l.getStock().getStockName());
+                vo.setTotalAsset(l.getTotalAsset());
+                vo.setTransactionType(l.getTransactionType());
+                vo.setTransactionDate(l.getTransactionDate());
+                vo.setSymbol(l.getStock().getSymbol());
+                vo.setShareCount(l.getShareCount());
+                vo.setPurchasePrice(l.getPurchasePrice());
+                vo.setEvaluatedSum((Integer) calculrateProfit(userId, l.getStock().getSymbol()).get(0));
+                vo.setProfitLoss((Integer) calculrateProfit(userId, l.getStock().getSymbol()).get(1));
+                vo.setProfitRatio((Double) calculrateProfit(userId, l.getStock().getSymbol()).get(2));
+                vo.setNowPrice((Integer) calculrateProfit(userId, l.getStock().getSymbol()).get(3));
+                vo.setHasAsset(true);
+                result.add(vo);
+                logger.info(String.valueOf(vo));
+            } else {
+                vo = new TranscationLogVO();
+                vo.setHasAsset(false);
+                result.add(vo);
+            }
         }
         return result;
     }
 
     @Override
-    public List<Integer> getOnesTotal() {
-        return repository.getRecentTotal();
+    public List<TranscationLogVO> pagination(Pagination pagination) {
+        List<TranscationLogVO> result = new ArrayList<>();
+        List<Asset> findLogs = repository.pagination(pagination);
+        return getTranscationLogVOS(result, findLogs);
     }
 
-//    @Override
-//    public void save(Asset asset) { }
-//
-//    @Override
-//    public Optional<Asset> findById(String id) {
-//        return Optional.empty();
-//    }
+    private List<TranscationLogVO> getTranscationLogVOS(List<TranscationLogVO> result, Iterable<Asset> findLogs){
+        findLogs.forEach( asset -> {
+            TranscationLogVO vo = new TranscationLogVO();
+            vo.setTransactionDate(asset.getTransactionDate());
+            vo.setTransactionType(asset.getTransactionType());
+            vo.setStockName(asset.getStock().getStockName());
+            vo.setPurchasePrice(asset.getPurchasePrice());
+            vo.setTotalAsset(asset.getTotalAsset());
+            result.add(vo);
+        });
+        return result;
+    }
+
 
     @Override
     public Optional<Asset> findById(Long id) {
@@ -115,13 +200,11 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public int count() {
-        return 0;
+        return (int)repository.count();
     }
 
     @Override
-    public void delete(Asset asset) {
-
-    }
+    public void delete(Asset asset) { }
 
     @Override
     public boolean exists(String id) {

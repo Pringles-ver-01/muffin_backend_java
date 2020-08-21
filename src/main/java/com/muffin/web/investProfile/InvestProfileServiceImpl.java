@@ -1,6 +1,8 @@
 package com.muffin.web.investProfile;
 
+import com.muffin.web.user.UserRepository;
 import com.muffin.web.util.GenericService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,16 +12,16 @@ interface InvestProfileService extends GenericService<InvestProfile>{
     void save(InvestProfileVO investProfile);
 
     void update(InvestProfileVO investProfile);
+
+    Optional<InvestProfile> findByInvestProfileId(Long id);
 }
 
 @Service
+@AllArgsConstructor
 public class InvestProfileServiceImpl implements InvestProfileService {
 
     private final InvestProfileRepository repository;
-
-    public InvestProfileServiceImpl(InvestProfileRepository repository) {
-        this.repository = repository;
-    }
+    private final UserRepository userRepository;
 
     @Override
     public void save(InvestProfileVO investProfile) {
@@ -29,14 +31,17 @@ public class InvestProfileServiceImpl implements InvestProfileService {
 
     @Override
     public void update(InvestProfileVO investProfile) {
-        InvestProfile ip = repository.findById(investProfile.getUser().getUserId()).get();
+        InvestProfile ip = null;
+        Optional<InvestProfile> findInvestProfile = repository.findById(investProfile.getUser().getUserId());
+        ip = findInvestProfile.orElseGet(InvestProfile::new);
+        ip.setUser(userRepository.findById(investProfile.getUser().getUserId()).get());
         ip.setInvestmentPropensity(investProfile.getInvestmentPropensity());
         ip.setInvestmentPeriod(investProfile.getInvestmentPeriod());
         repository.save(ip);
     }
 
     @Override
-    public Optional<InvestProfile> findById(Long id) {
+    public Optional<InvestProfile> findByInvestProfileId(Long id) {
         return Optional.empty();
     }
 

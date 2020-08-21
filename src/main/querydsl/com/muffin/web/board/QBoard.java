@@ -24,13 +24,13 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final StringPath boardContent = createString("boardContent");
 
+    public final NumberPath<Long> boardId = createNumber("boardId", Long.class);
+
     public final StringPath boardRegdate = createString("boardRegdate");
 
     public final StringPath boardTitle = createString("boardTitle");
 
     public final ListPath<com.muffin.web.comment.Comment, com.muffin.web.comment.QComment> commentList = this.<com.muffin.web.comment.Comment, com.muffin.web.comment.QComment>createList("commentList", com.muffin.web.comment.Comment.class, com.muffin.web.comment.QComment.class, PathInits.DIRECT2);
-
-    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.muffin.web.user.QUser user;
 

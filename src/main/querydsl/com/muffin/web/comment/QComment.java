@@ -26,9 +26,9 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final StringPath commentContent = createString("commentContent");
 
-    public final StringPath commentRegdate = createString("commentRegdate");
+    public final NumberPath<Long> commentId = createNumber("commentId", Long.class);
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath commentRegdate = createString("commentRegdate");
 
     public final com.muffin.web.user.QUser user;
 
