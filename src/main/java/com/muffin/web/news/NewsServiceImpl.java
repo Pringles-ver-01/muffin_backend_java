@@ -1,6 +1,5 @@
 package com.muffin.web.news;
 
-import com.muffin.web.user.UserRepository;
 import com.muffin.web.util.GenericService;
 import com.muffin.web.util.Pagination;
 import org.apache.commons.csv.CSVParser;
@@ -15,22 +14,24 @@ import java.util.List;
 import java.util.Optional;
 
 interface NewsService extends GenericService<News> {
-
     void readCsv();
-
-    List<News> showNewsList();
-
-
     News getNewsDetailById(Long newsId);
+    List<News> pagination(Pagination pagination);
+    List<News> showNewsList();
 }
 
 @Service
 public class NewsServiceImpl implements NewsService{
 
     private final NewsRepository newsRepository;
-
     public NewsServiceImpl(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
+    }
+
+    @Override
+    public List<News> pagination(Pagination pagination) {
+        List<News> findNews = newsRepository.pagination(pagination);
+        return findNews;
     }
 
     @Override
@@ -48,9 +49,9 @@ public class NewsServiceImpl implements NewsService{
                         csvRecord.get(0),
                         csvRecord.get(1),
                         csvRecord.get(2),
-                        csvRecord.get(3),
+                        csvRecord.get(3).replaceAll("(^\\p{Z}+|\\p{Z}+$)","\n"),
                         csvRecord.get(4)));
-            }
+            };
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -70,26 +71,26 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public Optional<News> findById(Long id) {
-        return Optional.empty();
+        return newsRepository.findById(id);
     }
 
     @Override
     public Iterable<News> findAll() {
-        return null;
+        return newsRepository.findAll();
     }
 
     @Override
     public int count() {
-        return 0;
+        return (int) newsRepository.count();
     }
 
     @Override
     public void delete(News news) {
-
+        newsRepository.deleteAll();
     }
 
     @Override
     public boolean exists(String id) {
-        return false;
+        return newsRepository.existsById(Long.valueOf(id));
     }
 }
