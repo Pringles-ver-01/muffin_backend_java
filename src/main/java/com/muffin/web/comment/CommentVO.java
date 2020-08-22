@@ -12,7 +12,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CommentVO {
-    private String commentContent, commentRegdate;
+    private Long commentId;
+    private String commentContent, commentRegdate, nickname;
     private User user;
     private Board board;
 }

@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface StockRepository extends JpaRepository<Stock, Long>, IStockRepository {
+<<<<<<< HEAD
 
 
 }
+=======
+}
+>>>>>>> master

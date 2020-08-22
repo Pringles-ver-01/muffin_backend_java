@@ -8,6 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+<<<<<<< HEAD
+=======
+import java.util.List;
+>>>>>>> master
 import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -64,8 +68,13 @@ public class AssetController {
         return box.get();
     }
 
+<<<<<<< HEAD
     @PostMapping("/sell")
     public void letSellStock(Map<String, Object> receipt){
         assetService.sellStock(receipt);
     }
 }
+=======
+
+}
+>>>>>>> master

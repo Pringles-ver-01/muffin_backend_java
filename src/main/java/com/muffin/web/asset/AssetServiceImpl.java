@@ -2,7 +2,10 @@ package com.muffin.web.asset;
 
 import com.muffin.web.stock.StockRepository;
 import com.muffin.web.stock.StockService;
+<<<<<<< HEAD
 import com.muffin.web.user.User;
+=======
+>>>>>>> master
 import com.muffin.web.user.UserRepository;
 import com.muffin.web.util.GenericService;
 import com.muffin.web.util.Pagination;
@@ -30,6 +33,7 @@ interface AssetService extends GenericService<Asset> {
 
 //    List<TranscationLogVO> transacList(Long userId);
 
+<<<<<<< HEAD
     List<Integer> getOnesTotal(Long userId); // 총액
 
     List<TranscationLogVO> getOnesHoldings(Long userId); // 주식목록
@@ -42,6 +46,15 @@ interface AssetService extends GenericService<Asset> {
     boolean existStock(Asset asset); // 종목 존재여부
 
 //    Asset findAssetByUserid(Long user); // 로그인 유저의 자산정보
+=======
+    List<Integer> getOnesTotal(Long userId);
+
+    List<TranscationLogVO> getOnesHoldings(Long userId);
+
+    List<TranscationLogVO> pagination(Pagination pagination);
+
+    Optional<Asset> findById(Long id);
+>>>>>>> master
 }
 @AllArgsConstructor
 @Service
@@ -122,7 +135,11 @@ public class AssetServiceImpl implements AssetService {
 
         Integer nowPrice = Integer.parseInt(stockService.getOneStock(symbol).getNow().replaceAll(",",""));
         List<Integer> purchaseShares = new ArrayList<>();
+<<<<<<< HEAD
         List<Asset> list = repository.findOnesAllAsset(userId);
+=======
+        List<Asset> list = repository.getHolingStocks(userId);
+>>>>>>> master
         for(Asset l : list) {
             purchaseShares.add(l.getPurchasePrice());
             purchaseShares.add(l.getShareCount());
@@ -145,7 +162,11 @@ public class AssetServiceImpl implements AssetService {
     public List<TranscationLogVO> getOnesHoldings(Long userId) {
         //shareCount가 0이면 보이지 않는다!!!
         List<TranscationLogVO> result = new ArrayList<>();
+<<<<<<< HEAD
         List<Asset> list = repository.findOnesAllAsset(userId);
+=======
+        List<Asset> list = repository.getHolingStocks(userId);
+>>>>>>> master
         TranscationLogVO vo = null;
 
         for(Asset l : list) {
@@ -181,6 +202,7 @@ public class AssetServiceImpl implements AssetService {
         return getTranscationLogVOS(result, findLogs);
     }
 
+<<<<<<< HEAD
     @Override //신규매수
     public void buyStock(Asset asset) {
         logger.info("buyStock.... " + asset);
@@ -229,6 +251,21 @@ public class AssetServiceImpl implements AssetService {
 //        List<Asset> result = new ArrayList<>();
 //        return result;
 //    }
+=======
+    private List<TranscationLogVO> getTranscationLogVOS(List<TranscationLogVO> result, Iterable<Asset> findLogs){
+        findLogs.forEach( asset -> {
+            TranscationLogVO vo = new TranscationLogVO();
+            vo.setTransactionDate(asset.getTransactionDate());
+            vo.setTransactionType(asset.getTransactionType());
+            vo.setStockName(asset.getStock().getStockName());
+            vo.setPurchasePrice(asset.getPurchasePrice());
+            vo.setTotalAsset(asset.getTotalAsset());
+            result.add(vo);
+        });
+        return result;
+    }
+
+>>>>>>> master
 
     private List<TranscationLogVO> getTranscationLogVOS(List<TranscationLogVO> result, Iterable<Asset> findLogs){
         findLogs.forEach( asset -> {

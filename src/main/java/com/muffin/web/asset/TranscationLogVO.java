@@ -9,4 +9,8 @@ public class TranscationLogVO {
     private int purchasePrice, shareCount, totalAsset, profitLoss, evaluatedSum, nowPrice;
     private boolean hasAsset;
     private double profitRatio;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

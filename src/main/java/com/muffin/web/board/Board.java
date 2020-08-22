@@ -20,11 +20,11 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="board_id")
-    private Long id;
+    private Long boardId;
 
     @Column(name = "board_title")
     private String boardTitle;
-    @Column(name="board_content", length= 8000)
+    @Column(name="board_content", length= 9000)
     private String boardContent;
     @Column(name="board_regdate")
     private String boardRegdate;

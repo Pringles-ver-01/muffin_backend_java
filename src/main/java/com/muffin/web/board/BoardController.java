@@ -4,6 +4,7 @@ import com.muffin.web.user.User;
 import com.muffin.web.util.Pagination;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -19,6 +20,7 @@ public class BoardController {
 
     @GetMapping("/pagination/{page}/{range}")
     public Map<?,?> pagination(@PathVariable int page, @PathVariable int range) {
+        System.out.println(page+", "+range);
         pagination.pageInfo(page, range, boardService.count());
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
@@ -27,7 +29,7 @@ public class BoardController {
     }
 
     @GetMapping("/recentBoard")
-    public Page<Board> recentBoard() {
+    public List<BoardVO> recentBoard() {
         return boardService.recentBoard();
     }
 
@@ -48,15 +50,19 @@ public class BoardController {
 
     @GetMapping("/findOne/{id}")
     public Optional<Board> findOne(@PathVariable Long id) {
-        return boardService.findById(id);
+        return boardService.findByBoardId(id);
     }
 
     @GetMapping("/search/{searchWord}/{condition}/{page}/{range}")
     public Map<?,?> search(@PathVariable String searchWord,@PathVariable String condition, @PathVariable int page, @PathVariable int range) {
+        System.out.println(searchWord);
+        System.out.println(condition);
+        System.out.println(page);
+        System.out.println(range);
         pagination.pageInfo(page, range, boardService.findBySearchWord(searchWord, condition).size());
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
-        box.put("list", null);
+        box.put("list", boardService.findBySearchWordPage(searchWord, condition, pagination));
         return box;
     }
 
@@ -65,17 +71,17 @@ public class BoardController {
         pagination.pageInfo(page, range, boardService.findAllBoardsByUserId(user.getUserId()).size());
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
-        box.put("list", boardService.findByUserId(user.getUserId(), pagination));
+        box.put("list", boardService.findByEmailId(user.getUserId(), pagination));
         return box;
     }
 
     @PostMapping("/update")
-    public Optional<Board> update(@RequestBody BoardVO board) {
-        return boardService.update(board);
+    public void update(@RequestBody BoardVO board) {
+        boardService.update(board);
     }
 
-    @GetMapping("/delete/{id}")
-    public void delete(@PathVariable Long id) {
-        boardService.delete(boardService.findById(id).get());
+    @GetMapping("/delete/{boardId}")
+    public void delete(@PathVariable Long boardId) {
+        boardService.delete(boardService.findByBoardId(boardId).get());
     }
 }

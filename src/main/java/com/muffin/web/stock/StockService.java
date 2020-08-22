@@ -21,7 +21,11 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+<<<<<<< HEAD
  public interface StockService extends GenericService<Stock> {
+=======
+public interface StockService extends GenericService<Stock> {
+>>>>>>> master
 
     Optional<Stock> findById(String id);
 
@@ -33,7 +37,11 @@ import org.jsoup.select.Elements;
 
     CrawledStockVO getOneStock(String symbol);
 
+<<<<<<< HEAD
      List<CrawledStockVO> pagination(Pagination pagination);
+=======
+    List<CrawledStockVO> pagination(Pagination pagination);
+>>>>>>> master
 }
 
 @Service class StockServiceImpl implements StockService{
@@ -123,6 +131,7 @@ import org.jsoup.select.Elements;
     private CrawledStockVO stockCrawling(String stockCode) {
         logger.info("StockServiceImpl : stockCrawling( "+ stockCode +" )");
         CrawledStockVO vo = null;
+<<<<<<< HEAD
             try {
                 String url = "https://finance.naver.com/item/main.nhn?code=" + stockCode;
                 Connection.Response homepage = Jsoup.connect(url).method(Connection.Method.GET)
@@ -183,6 +192,68 @@ import org.jsoup.select.Elements;
             } catch(Exception e) {
                 e.printStackTrace();
             }
+=======
+        try {
+            String url = "https://finance.naver.com/item/main.nhn?code=" + stockCode;
+            Connection.Response homepage = Jsoup.connect(url).method(Connection.Method.GET)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
+                    .execute();
+            Document d = homepage.parse();
+
+            Elements getName = d.select("div.wrap_company");
+            Elements getH2 = getName.select("h2");
+            Elements stockName = getH2.select("a");
+
+            Elements symbol = d.select("span.code");
+
+            Elements table = d.select("table.no_info");
+            Elements trs = table.select("tr");
+            Element firstTr = trs.get(0);
+            Elements firstTrTds = firstTr.select("td");
+            Element high = firstTrTds.get(0);
+            Element close = firstTrTds.get(1);
+            Element volume = firstTrTds.get(2);
+
+            Element secondTr = trs.get(1);
+            Elements secondTrTds = secondTr.select("td");
+            Element open = secondTrTds.get(0);
+            Element low = secondTrTds.get(1);
+            Element transacAmount = secondTrTds.get(2);
+
+            Elements now = d.select("p.no_today");
+            Elements nowBlind = now.select("span.blind");
+            Elements openBlind = open.select("span.blind");
+            Elements highBlind = high.select("span.blind");
+            Elements lowBlind = low.select("span.blind");
+            Elements closeBlind = close.select("span.blind");
+            Elements volumeBlind = volume.select("span.blind");
+            Elements transacAmountBlind = transacAmount.select("span.blind");
+            Elements crawledDate = d.select("#time");
+
+            Elements dod = d.select("p.no_exday");
+            Elements dodblind = dod.select("span.blind");
+
+            Elements capital = d.select("#_market_sum");
+
+            for(int i = 0; i < symbol.size(); i++) {
+                vo = new CrawledStockVO();
+                vo.setStockName(stockName.get(i).text());
+                vo.setSymbol(symbol.get(i).text());
+                vo.setNow(nowBlind.get(i).text());
+                vo.setHigh(highBlind.get(i).text());
+                vo.setLow(lowBlind.get(i).text());
+                vo.setOpen(openBlind.get(i).text());
+                vo.setClose(closeBlind.get(i).text());
+                vo.setVolume(volumeBlind.get(i).text());
+                vo.setDate(crawledDate.get(i).text());
+                vo.setTransacAmount(transacAmountBlind.get(i).text());
+                vo.setDod(dodblind.get(i).text());
+                vo.setCapital(capital.get(i).text());
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+>>>>>>> master
 
         return vo;
     }

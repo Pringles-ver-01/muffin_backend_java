@@ -1,7 +1,10 @@
 package com.muffin.web.asset;
 
 import com.amazonaws.services.alexaforbusiness.model.BusinessReportRecurrence;
+<<<<<<< HEAD
 import com.muffin.web.user.User;
+=======
+>>>>>>> master
 import com.muffin.web.util.Pagination;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,11 +28,18 @@ interface IAssetRepository{
 //    List<Asset> getTransacList(Long userId);
 
     List<Integer> getRecentTotal(Long userId);
+<<<<<<< HEAD
 
     public List<Asset> findOnesAllAsset(Long userId); // 로그인한 유저의 모든 에셋
 
     List<Asset> pagination(Pagination pagination);
 
+=======
+
+    List<Asset> getHolingStocks(Long userId);
+
+    List<Asset> pagination(Pagination pagination);
+>>>>>>> master
 }
 
 @Repository
@@ -75,7 +85,11 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
 //    }
 
     @Override
+<<<<<<< HEAD
     public List<Asset> findOnesAllAsset(Long userId){
+=======
+    public List<Asset> getHolingStocks(Long userId){
+>>>>>>> master
         logger.info("AssetRepositoryImpl : getHolingStocks()");
         return queryFactory.select(Projections.fields(Asset.class,
                 asset.purchasePrice,

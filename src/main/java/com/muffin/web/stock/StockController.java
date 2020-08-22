@@ -51,4 +51,8 @@ public class StockController {
 //        logger.info("/candle");
 //        return stockService.candleCarts();
 //    }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

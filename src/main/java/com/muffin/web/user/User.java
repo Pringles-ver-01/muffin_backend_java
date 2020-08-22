@@ -57,7 +57,4 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private InvestProfile investProfile;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<News> news;
-
 }
