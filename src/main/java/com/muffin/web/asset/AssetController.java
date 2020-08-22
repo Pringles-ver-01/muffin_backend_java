@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -65,5 +64,8 @@ public class AssetController {
         return box.get();
     }
 
-
+    @PostMapping("/sell")
+    public void letSellStock(Map<String, Object> receipt){
+        assetService.sellStock(receipt);
+    }
 }

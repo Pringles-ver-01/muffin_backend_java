@@ -1,7 +1,9 @@
 package com.muffin.web.user;
+import com.muffin.web.asset.Asset;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -11,6 +13,7 @@ public class UserController {
 
     private final UserService userService;
     private final MailService mailService;
+//    private final AssetService assetService;
 
     public UserController(UserService userService, MailService mailService) {
         this.userService = userService;
@@ -39,6 +42,7 @@ public class UserController {
         Optional<User> findUser = userService.findByEmailId(user.getEmailId());
         if (findUser.isPresent()) {
             User returnUser = findUser.get();
+//            List<Asset> usersHasAsset = assetService.findAssetByUserid(returnUser.getUserId());
             return returnUser.getPassword().equals(user.getPassword()) ? ResponseEntity.ok(returnUser) : ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.notFound().build();

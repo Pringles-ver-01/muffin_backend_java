@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 @Component
 @Lazy
-public class Box<T> {
+public class Box<T, O> {
     private HashMap<String, T> box;
     public Box() {
         box = new HashMap<>();
