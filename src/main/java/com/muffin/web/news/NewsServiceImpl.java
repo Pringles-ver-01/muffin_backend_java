@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,10 @@ interface NewsService extends GenericService<News> {
     News getNewsDetailById(Long newsId);
     List<News> pagination(Pagination pagination);
     List<News> showNewsList();
+
+    List<News> findBySearchWord(String searchWord);
+
+    Object findBySearchWordPage(String searchWord, Pagination pagination);
 }
 
 @Service
@@ -61,6 +66,16 @@ public class NewsServiceImpl implements NewsService{
     @Override
     public List<News> showNewsList() {
         return newsRepository.showAllNews();
+    }
+
+    @Override
+    public List<News> findBySearchWord(String searchWord) {
+        return newsRepository.selectNewsContentLikeSearchWord(searchWord);
+    }
+
+    @Override
+    public List<News> findBySearchWordPage(String searchWord, Pagination pagination) {
+        return newsRepository.selectNewsContentLikeSearchWordPage(searchWord, pagination);
     }
 
     @Override
