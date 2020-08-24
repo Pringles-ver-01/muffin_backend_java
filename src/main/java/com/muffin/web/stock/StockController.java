@@ -1,3 +1,4 @@
+
 package com.muffin.web.stock;
 
 import com.muffin.web.util.Box;
@@ -51,4 +52,5 @@ public class StockController {
 //        logger.info("/candle");
 //        return stockService.candleCarts();
 //    }
+
 }

@@ -16,7 +16,18 @@ import java.util.Map;
 public class NewsController {
 
     private NewsService newsService;
+    private Box box;
     private Pagination pagination;
+
+    @GetMapping("/search/{searchWord}/{page}/{range}")
+    public Map<?, ?> search(@PathVariable String searchWord, @PathVariable int page, @PathVariable int range){
+        System.out.println(searchWord);
+        pagination.pageInfo(page, range, newsService.findBySearchWord(searchWord).size());
+        Map<String, Object> box = new HashMap<>();
+        box.put("pagination", pagination);
+        box.put("list", newsService.findBySearchWordPage(searchWord, pagination));
+        return box;
+    }
 
     @GetMapping("/pagination/{page}/{range}")
     public Map<?,?> pagination(@PathVariable int page, @PathVariable int range){
@@ -35,13 +46,12 @@ public class NewsController {
 
     @GetMapping("/getList")
     public List<News> getNewsList(){
-        System.out.println("컨트롤러");
-        System.out.println(newsService.showNewsList());
         return newsService.showNewsList();
     }
 
     @GetMapping("/getDetail/{newsId}")
     public News getNewsDetail(@PathVariable Long newsId){
+        System.out.println(newsId);
         return newsService.getNewsDetailById(newsId);
     }
 }

@@ -84,4 +84,5 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
     }
 
 
+
 }
