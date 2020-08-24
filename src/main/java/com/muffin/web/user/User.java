@@ -59,10 +59,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private InvestProfile investProfile;
 
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
+
+
+
 }

@@ -1,9 +1,8 @@
 
 package com.muffin.web.stock;
 
-import com.muffin.web.util.Box;
 import com.muffin.web.util.Pagination;
-import lombok.AllArgsConstructor;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +19,8 @@ public class StockController {
 
     private static final Logger logger = LoggerFactory.getLogger(StockController.class);
     private StockService stockService;
-<<<<<<< HEAD
-    private Pagination pagination;
-
-    @GetMapping("/csv")
-    public void readCsv() {
-        stockService.readCSV();
-    }
-
-=======
     private final Pagination pagination;
+
 
     @GetMapping("/csv")
     public void readCsv() {stockService.readCSV();}
@@ -62,5 +53,4 @@ public class StockController {
 //        return stockService.candleCarts();
 //    }
 
->>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
 }

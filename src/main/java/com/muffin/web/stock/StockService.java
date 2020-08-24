@@ -29,14 +29,14 @@ public interface StockService extends GenericService<Stock> {
 
     void readCSV();
 
-<<<<<<< HEAD
-=======
+
+
     List<CrawledStockVO> allStock();
 
     CrawledStockVO getOneStock(String symbol);
 
     List<CrawledStockVO> pagination(Pagination pagination);
->>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
+
 }
 
 @Service class StockServiceImpl implements StockService{

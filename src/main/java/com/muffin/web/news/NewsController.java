@@ -21,10 +21,7 @@ public class NewsController {
 
     @GetMapping("/search/{searchWord}/{page}/{range}")
     public Map<?, ?> search(@PathVariable String searchWord, @PathVariable int page, @PathVariable int range){
-<<<<<<< HEAD
-=======
         System.out.println(searchWord);
->>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
         pagination.pageInfo(page, range, newsService.findBySearchWord(searchWord).size());
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
@@ -54,10 +51,7 @@ public class NewsController {
 
     @GetMapping("/getDetail/{newsId}")
     public News getNewsDetail(@PathVariable Long newsId){
-<<<<<<< HEAD
-=======
         System.out.println(newsId);
->>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
         return newsService.getNewsDetailById(newsId);
     }
 }

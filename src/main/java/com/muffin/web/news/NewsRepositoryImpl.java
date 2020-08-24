@@ -85,8 +85,7 @@ public class NewsRepositoryImpl extends QuerydslRepositorySupport implements INe
     }
 
 
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
+
+
