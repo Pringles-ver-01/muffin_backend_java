@@ -1,5 +1,6 @@
 package com.muffin.web.stock;
 import com.muffin.web.util.GenericService;
+import com.muffin.web.util.Pagination;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -16,6 +17,7 @@ import java.util.Optional;
 interface StockService extends GenericService<Stock> {
 
     void readCSV();
+
 }
 
 @Service
