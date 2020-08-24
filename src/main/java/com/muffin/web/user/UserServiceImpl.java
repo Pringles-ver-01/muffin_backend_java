@@ -1,16 +1,16 @@
 package com.muffin.web.user;
-import com.muffin.web.stock.StockRepositoryImpl;
+import com.muffin.web.asset.Asset;
+import com.muffin.web.asset.AssetRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import com.muffin.web.util.GenericService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Optional;
 
 interface UserService extends GenericService<User> {
@@ -22,16 +22,19 @@ interface UserService extends GenericService<User> {
     void readCsv();
 
     Optional<User> findByUserId(Long userId);
+
+    List<Asset> findUsersAsset(Long id); //로그인한 유저의 asset 찾기
 }
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final AssetRepository assetRepository;
 
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, AssetRepository assetRepository) {
         this.repository = repository;
+        this.assetRepository = assetRepository;
     }
 
     @Override
@@ -46,8 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void readCsv() {
-        logger.info("UserServiceImpl : readCsv()");
-        InputStream is = getClass().getResourceAsStream("/static/user - 시트1 (1).csv");
+        InputStream is = getClass().getResourceAsStream("/static/users.csv");
         try {
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             CSVParser parser = new CSVParser(fileReader, CSVFormat.DEFAULT);
@@ -69,6 +71,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByUserId(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public List<Asset> findUsersAsset(Long userid) {
+        return assetRepository.findOnesAllAsset(userid);
     }
 
     @Override

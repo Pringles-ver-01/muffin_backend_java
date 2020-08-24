@@ -8,13 +8,5 @@ import java.util.List;
 
 public interface AssetRepository extends JpaRepository<Asset, Long>, IAssetRepository{
 
-<<<<<<< HEAD
-//    @Modifying
-//    @Query("")
-//    public void updateAsset(Asset asset);
-
-
 }
-=======
-}
->>>>>>> master
+

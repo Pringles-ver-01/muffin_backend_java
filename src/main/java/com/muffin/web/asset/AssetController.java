@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-<<<<<<< HEAD
-=======
+
+
 import java.util.List;
->>>>>>> master
+
 import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -44,9 +44,9 @@ public class AssetController {
     }
 
 //    @GetMapping("/transactionlog/{userId}")
-//    public List<TranscationLogVO> getTransacDetail(@PathVariable Long userId) {
+//    public List<TransactionLogVO> getTransacDetail(@PathVariable Long userId) {
 //        logger.info("/transaction_list");
-//        List<TranscationLogVO> logs = assetService.transacList(userId);
+//        List<TransactionLogVO> logs = assetService.transacList(userId);
 //        return logs;
 //    }
 
@@ -68,13 +68,19 @@ public class AssetController {
         return box.get();
     }
 
-<<<<<<< HEAD
     @PostMapping("/sell")
-    public void letSellStock(Map<String, Object> receipt){
-        assetService.sellStock(receipt);
+    public void letSellStock(@RequestBody TransactionLogVO invoice){
+        logger.info("AssetController : /sell");
+        logger.info(String.valueOf(invoice));
+        assetService.sellStock(invoice);
+    }
+
+    @PostMapping("/buy")
+    public void letBuyStock(@RequestBody TransactionLogVO invoice) {
+        logger.info("AssetController : /buy ~~~~~~~");
+        logger.info(String.valueOf(invoice));
+        assetService.buyStock(invoice);
     }
 }
-=======
 
-}
->>>>>>> master
+
