@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "news")
 public class News {
+<<<<<<< HEAD
     public long getNewsId() {
         return newsId;
     }
@@ -59,6 +60,8 @@ public class News {
     public void setNewsThumbnail(String newsThumbnail) {
         this.newsThumbnail = newsThumbnail;
     }
+=======
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,4 +85,8 @@ public class News {
 
 
     public News() { }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c

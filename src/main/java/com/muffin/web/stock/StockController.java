@@ -1,3 +1,4 @@
+
 package com.muffin.web.stock;
 
 import com.muffin.web.util.Box;
@@ -19,6 +20,7 @@ public class StockController {
 
     private static final Logger logger = LoggerFactory.getLogger(StockController.class);
     private StockService stockService;
+<<<<<<< HEAD
     private Pagination pagination;
 
     @GetMapping("/csv")
@@ -26,4 +28,39 @@ public class StockController {
         stockService.readCSV();
     }
 
+=======
+    private final Pagination pagination;
+
+    @GetMapping("/csv")
+    public void readCsv() {stockService.readCSV();}
+
+    @GetMapping("/pagination/{page}/{range}")
+    public Map<?,?> pagination(@PathVariable int page, @PathVariable int range) {
+        System.out.println(page+", "+range);
+        pagination.pageInfo(page, range, stockService.count());
+        Map<String, Object> box = new HashMap<>();
+        box.put("pagination", pagination);
+        box.put("list", stockService.pagination(pagination));
+        return box;
+    }
+
+    @GetMapping("/marketprices")
+    public List<CrawledStockVO> getStockPrice() {
+        logger.info("/stockCrawling");
+        return  stockService.allStock();
+    }
+
+    @GetMapping("/{symbol}")
+    public CrawledStockVO getStockDetail(@PathVariable String symbol) {
+        logger.info("/stocks/{stockId}");
+        return stockService.getOneStock(symbol);
+    }
+
+//    @GetMapping("/candles")
+//    public List<CrawledStockVO> getCandle() {
+//        logger.info("/candle");
+//        return stockService.candleCarts();
+//    }
+
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
 }

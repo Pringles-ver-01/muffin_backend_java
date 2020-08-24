@@ -24,6 +24,7 @@ public class Pagination {
         this.startList = (page - 1) * listSize;
         this.prev = range != 1;
         this.next = endPage <= pageCnt;
+<<<<<<< HEAD
 
         if(this.endPage >= this.pageCnt){
             this.next = false;
@@ -116,5 +117,10 @@ public class Pagination {
 
     public void setNext(boolean next) {
         this.next = next;
+=======
+        if(this.endPage > this.pageCnt){
+            this.endPage = this.pageCnt;
+        }
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
     }
 }

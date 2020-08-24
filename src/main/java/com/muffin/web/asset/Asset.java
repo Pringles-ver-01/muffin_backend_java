@@ -45,7 +45,7 @@ public class Asset {
     @JsonIgnore @ManyToOne @JoinColumn(name="stock_id")
     private Stock stock;
 
-    @ManyToOne @JoinColumn(name="user_id")
-    private User user;
+    @JsonIgnore @ManyToOne @JoinColumn(name="user_id")
+    public User user;
 
 }

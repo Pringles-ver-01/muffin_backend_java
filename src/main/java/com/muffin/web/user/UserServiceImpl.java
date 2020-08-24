@@ -2,7 +2,6 @@ package com.muffin.web.user;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import com.muffin.web.util.Box;
 import com.muffin.web.util.GenericService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +17,8 @@ interface UserService extends GenericService<User> {
     Optional<User> findByEmailId(String emailId);
 
     void readCsv();
+
+    Optional<User> findByUserId(Long userId);
 }
 
 @Service
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findByUserId(Long id) {
         return repository.findById(id);
     }
 

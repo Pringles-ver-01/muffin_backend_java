@@ -10,4 +10,8 @@ public interface NewsRepository extends JpaRepository<News, Long>, INewsReposito
 
     @Query("select e from News e where e.newsTitle like %:searchWord%")
     List<News> selectNewsContentLikeSearchWord(@Param("searchWord") String searchWord);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c

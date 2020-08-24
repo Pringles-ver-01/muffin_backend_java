@@ -19,7 +19,11 @@ interface NewsService extends GenericService<News> {
     News getNewsDetailById(Long newsId);
     List<News> pagination(Pagination pagination);
     List<News> showNewsList();
+<<<<<<< HEAD
 
+=======
+    Optional<News> findById(Long id);
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
     List<News> findBySearchWord(String searchWord);
 
     Object findBySearchWordPage(String searchWord, Pagination pagination);
@@ -41,7 +45,11 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public void readCsv() {
+<<<<<<< HEAD
        InputStream is = getClass().getResourceAsStream("/static/news_crawling.csv");
+=======
+        InputStream is = getClass().getResourceAsStream("/static/news_crawling.csv");
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
         try {
             //Reader reader = Files.newBufferedReader(Paths.get("/static/news_crawling.csv"));
             //CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);
@@ -108,4 +116,8 @@ public class NewsServiceImpl implements NewsService{
     public boolean exists(String id) {
         return newsRepository.existsById(Long.valueOf(id));
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 32c5f6059ce403b5bfc00b8c232c914049589e9c
