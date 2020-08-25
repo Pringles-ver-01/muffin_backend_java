@@ -24,6 +24,8 @@ public class Asset {
     @Column(name = "purchase_price") private int purchasePrice;
     @Column(name = "share_count") private int shareCount;
     @Column(name = "total_asset") private int totalAsset;
+    @Column(name = "total_profit") private int totalProfit;
+    @Column(name = "total_profit_ratio") private double totalProfitRatio;
     @Column(name = "transaction_date") private String transactionDate;
     @Column(name = "transaction_type") private String transactionType;
 
@@ -31,9 +33,13 @@ public class Asset {
     public Asset(int purchasePrice,
                  int shareCount,
                  int totalAsset,
+                 int totalProfit,
+                 double totalProfitRatio,
                  String transactionDate,
                  String transactionType, User user, Stock stock) {
         this.totalAsset = totalAsset;
+        this.totalProfit = totalProfit;
+        this.totalProfitRatio = totalProfitRatio;
         this.transactionDate = transactionDate;
         this.shareCount = shareCount;
         this.transactionType = transactionType;
