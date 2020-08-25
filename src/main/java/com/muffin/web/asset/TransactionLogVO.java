@@ -9,5 +9,7 @@ public class TransactionLogVO {
     private int purchasePrice, shareCount, totalAsset, profitLoss, evaluatedSum, nowPrice, totalProfit;
     private boolean hasAsset;
     private double profitRatio, totalProfitRatio;
+
+
 }
 

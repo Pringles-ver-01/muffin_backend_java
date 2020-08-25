@@ -40,7 +40,7 @@ interface IAssetRepository {
 
     void updateAsset(TransactionLogVO update);
 
-    void saveAsset(TransactionLogVO update);
+//    void saveAsset(TransactionLogVO update);
 }
 
 @Repository
@@ -187,7 +187,7 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     public void updateAsset(TransactionLogVO update) {
         logger.info("updateAsset" + update);
         queryFactory.update(asset)
-                .where(asset.assetId.eq(update.getAssetId()))
+                .where(asset.assetId.eq(update.getAssetId()))  //assetId : 클라이언트에서 부터 null로 들어오는데, set하는 방법을 모름 or symbol : update에 조인을 어떻게 걸어요??
 //                .set(asset.assetId, update.getAssetId())
                 .set(asset.purchasePrice, update.getPurchasePrice())
                 .set(asset.shareCount, update.getShareCount())
@@ -201,13 +201,12 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .execute();
     }
 
-    @Override
+    /*@Override
     @Modifying
     @Transactional
     public void saveAsset(TransactionLogVO update) {
         logger.info("saveAsset" + update);
         queryFactory.update(asset)
-                .where(asset.user.userId.eq(update.getUserId()))
                 .set(asset.purchasePrice, update.getPurchasePrice())
                 .set(asset.shareCount, update.getShareCount())
                 .set(asset.totalAsset, update.getTotalAsset())
@@ -216,6 +215,8 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .set(asset.totalProfit, update.getTotalProfit())
                 .set(asset.totalProfitRatio, update.getTotalProfitRatio())
                 .set(asset.stock.stockId, update.getStockId())
+                .set(asset.user.userId, update.getUserId())
+                .set(asset.stock.stockId, update.getStockId())
                 .execute();
-    }
+    }*/
 }

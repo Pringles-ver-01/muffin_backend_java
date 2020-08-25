@@ -161,6 +161,7 @@ public class AssetServiceImpl implements AssetService {
                 vo.setTransactionType(l.getTransactionType());
                 vo.setTransactionDate(l.getTransactionDate());
                 vo.setSymbol(l.getStock().getSymbol());
+                vo.setStockId(l.getStock().getStockId());
                 vo.setShareCount(l.getShareCount());
                 vo.setPurchasePrice(l.getPurchasePrice());
                 vo.setEvaluatedSum((Integer) calculrateProfit(userId, l.getStock().getSymbol()).get(0));
@@ -169,7 +170,7 @@ public class AssetServiceImpl implements AssetService {
                 vo.setNowPrice((Integer) calculrateProfit(userId, l.getStock().getSymbol()).get(3));
                 vo.setHasAsset(true);
                 result.add(vo);
-                logger.info(String.valueOf(vo));
+                logger.info("~~~~getAssetId~~~~~ " +vo.getAssetId());
             } else {
                 vo = new TransactionLogVO();
                 vo.setHasAsset(false);
@@ -195,8 +196,6 @@ public class AssetServiceImpl implements AssetService {
         int buyAmount = invoice.getPurchasePrice();
         int newAmount = recentTotal - buyAmount;
 
-        logger.info("**********  " + invoice.getSymbol() );
-        logger.info("~~~~~~~~ " + repository.getOwnedShareCount(invoice.getSymbol()));
         if ( repository.getOwnedShareCount(invoice.getSymbol()) == null ) {
             int newShareCount = buyCount;
             int totalProfit = newAmount - recentTotal;
@@ -206,6 +205,8 @@ public class AssetServiceImpl implements AssetService {
             asset.setTransactionType(invoice.getTransactionType());
             asset.setTransactionDate(invoice.getTransactionDate());
             asset.setPurchasePrice(invoice.getPurchasePrice());
+            asset.setSymbol(invoice.getSymbol());
+            asset.setStockName(invoice.getStockName());
             asset.setShareCount(newShareCount);
             asset.setTotalAsset(newAmount);
             asset.setTotalProfit(totalProfit);
@@ -226,6 +227,8 @@ public class AssetServiceImpl implements AssetService {
             asset.setTransactionType(invoice.getTransactionType());
             asset.setTransactionDate(invoice.getTransactionDate());
             asset.setPurchasePrice(invoice.getPurchasePrice());
+            asset.setSymbol(invoice.getSymbol());
+            asset.setStockName(invoice.getStockName());
             asset.setShareCount(newShareCount);
             asset.setTotalAsset(newAmount);
             asset.setTotalProfit(totalProfit);
@@ -235,7 +238,6 @@ public class AssetServiceImpl implements AssetService {
 
             logger.info("exist stock...... " + asset);
             updateStock(asset);
-
         }
     }
 
@@ -246,7 +248,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override // 매도
     public void sellStock(TransactionLogVO invoice) {
-        logger.info("void sellStock...");
+        logger.info("void sellStock..." + invoice);
         TransactionLogVO asset = new TransactionLogVO();
         int recentTotal = repository.getRecentTotal(invoice.getUserId());
         int recentShareCount = repository.getOwnedShareCount(invoice.getSymbol());
@@ -260,6 +262,9 @@ public class AssetServiceImpl implements AssetService {
         asset.setPurchasePrice(invoice.getPurchasePrice());
         asset.setTransactionDate(invoice.getTransactionDate());
         asset.setTransactionType(invoice.getTransactionType());
+        asset.setSymbol(invoice.getSymbol());
+        asset.setStockName(invoice.getStockName());
+        asset.setUserId(invoice.getUserId());
 
         int totalProfit = newAmount - recentTotal;
         double totalProfitRatio = (double) Math.round((double) totalProfit / (double) recentTotal * 10000) / 100;
