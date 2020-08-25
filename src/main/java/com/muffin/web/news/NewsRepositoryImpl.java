@@ -57,7 +57,6 @@ public class NewsRepositoryImpl extends QuerydslRepositorySupport implements INe
                 .offset(pagination.getStartList())
                 .limit(pagination.getListSize())
                 .fetch();
-        System.out.println(testResult);
         return testResult;
 
     }
