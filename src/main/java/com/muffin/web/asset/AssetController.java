@@ -69,6 +69,7 @@ public class AssetController {
         return box.get();
     }
 
+<<<<<<< HEAD
     @PostMapping("/buy/{userId}")
     public List<TransactionLogVO> letBuyStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
         logger.info("AssetController : /buy ~~~~~~~");
@@ -88,3 +89,19 @@ public class AssetController {
 }
 
 
+=======
+    @PostMapping("/sell")
+    public void letSellStock(@RequestBody TransactionLogVO invoice){
+        logger.info("AssetController : /sell");
+        logger.info(String.valueOf(invoice));
+        assetService.sellStock(invoice);
+    }
+
+    @PostMapping("/buy")
+    public void letBuyStock(@RequestBody TransactionLogVO invoice) {
+        logger.info("AssetController : /buy ~~~~~~~");
+        logger.info(String.valueOf(invoice));
+        assetService.buyStock(invoice);
+    }
+}
+>>>>>>> master

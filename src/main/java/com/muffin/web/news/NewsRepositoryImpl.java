@@ -18,6 +18,9 @@ interface INewsRepository {
     News showNewsDetail(Long newsId);
 
     List<News> pagination(Pagination pagination);
+
+
+    List<News> selectNewsContentLikeSearchWordPage(String searchWord, Pagination pagination);
 }
 
 
@@ -37,11 +40,26 @@ public class NewsRepositoryImpl extends QuerydslRepositorySupport implements INe
         QNews qn = news;
         List<News> pNews = new ArrayList<>();
         pNews = queryFactory.selectFrom(qn)
-                .orderBy(qn.newsId.desc())
+                .orderBy(qn.newsRegDate.desc())
                 .offset(pagination.getStartList())
                 .limit(pagination.getListSize())
                 .fetch();
         return pNews;
+    }
+
+    @Override
+    public List<News> selectNewsContentLikeSearchWordPage(String searchWord, Pagination pagination) {
+        QNews qn = news;
+        List<News> testResult = new ArrayList<>();
+        testResult = queryFactory.selectFrom(qn)
+                .where(qn.newsContent.like("%"+searchWord+"%"))
+                .orderBy(qn.newsRegDate.desc())
+                .offset(pagination.getStartList())
+                .limit(pagination.getListSize())
+                .fetch();
+        System.out.println(testResult);
+        return testResult;
+
     }
 
     @Override
@@ -50,9 +68,9 @@ public class NewsRepositoryImpl extends QuerydslRepositorySupport implements INe
         result = queryFactory.select(Projections.fields(News.class,
                 news.newsId, news.newsTitle, news.newsRegDate))
                 .from(news)
-                .limit(5)
+                .orderBy(news.newsRegDate.desc())
+                .limit(7)
                 .fetch();
-        System.out.println(result);
         return result;
     }
 

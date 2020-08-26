@@ -1,7 +1,11 @@
 package com.muffin.web.asset;
 
 import com.muffin.web.util.Pagination;
+<<<<<<< HEAD
 import com.querydsl.core.Tuple;
+=======
+import com.querydsl.core.types.EntityPath;
+>>>>>>> master
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.slf4j.Logger;
@@ -19,19 +23,27 @@ import static com.muffin.web.asset.QAsset.asset;
 import static com.muffin.web.stock.QStock.stock;
 import static com.muffin.web.user.QUser.user;
 
+<<<<<<< HEAD
 interface IAssetRepository {
+=======
+interface IAssetRepository{
+>>>>>>> master
     Asset showOneData(Long userId);
 
 //    List<Asset> getTransacList(Long userId);
 
     Integer getRecentTotal(Long userId); // 로그인한 유저의 총자산
 
+<<<<<<< HEAD
     Asset getRecentProfit(Long userId); // 로그인한 유저의 수익금과 률
 
+=======
+>>>>>>> master
     List<Asset> findOnesAllAsset(Long userid); // 로그인한 유저의 모든 에셋
 
     List<Asset> pagination(Pagination pagination);
 
+<<<<<<< HEAD
     Integer getOwnedShareCount(String symbol); // 유저아이디와 주식도 같을 때, 해당 보유한 주식의 shareCount수 리턴
 
     Integer getOwnedStockCount(Long userId); // 유저가 가진 종목의 갯수
@@ -41,6 +53,15 @@ interface IAssetRepository {
     void updateAsset(TransactionLogVO update);
 
 //    void saveAsset(TransactionLogVO update);
+=======
+    Integer getOwnedShareCount(Long userId, String symbol); // 유저아이디와 주식도 같을 때, 해당 보유한 주식의 shareCount수 리턴
+
+    Integer getOwnedStockCount(Long userId); // 유저가 가진 종목의 갯수
+
+    void deleteAsset(Long assetId);
+
+    void updateAsset(Asset update);
+>>>>>>> master
 }
 
 @Repository
@@ -89,7 +110,11 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
 //    }
 
     @Override
+<<<<<<< HEAD
     public List<Asset> findOnesAllAsset(Long userId) {
+=======
+    public List<Asset> findOnesAllAsset(Long userId){
+>>>>>>> master
         logger.info("AssetRepositoryImpl : findOnesAllAsset()");
         return queryFactory.select(Projections.fields(Asset.class,
                 asset.purchasePrice,
@@ -115,6 +140,10 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     @Override
     public Integer getRecentTotal(Long userId) {
         logger.info("AssetRepositoryImpl : getRecentTotal()");
@@ -130,6 +159,7 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     }
 
     @Override
+<<<<<<< HEAD
     public Asset getRecentProfit(Long userId) {
         logger.info("getRecentProfit(Long userId)");
         return queryFactory.select(Projections.fields(Asset.class,
@@ -149,19 +179,30 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
 
     @Override
     public Integer getOwnedShareCount(String symbol) {
+=======
+    public Integer getOwnedShareCount(Long userId, String symbol){
+>>>>>>> master
         return queryFactory.select(asset.shareCount)
                 .from(asset)
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
                 .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
                 .fetchJoin()
+<<<<<<< HEAD
 //                .where(asset.user.userId.eq(userId))
+=======
+                .where(asset.user.userId.eq(userId))
+>>>>>>> master
                 .where(asset.stock.symbol.eq(symbol))
                 .fetchOne();
     }
 
     @Override
     public Integer getOwnedStockCount(Long userId) {
+<<<<<<< HEAD
         return (int) queryFactory.select(asset.stock.stockName)
+=======
+        return (int)queryFactory.select(asset.stock.stockName)
+>>>>>>> master
                 .from(asset)
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
                 .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
@@ -170,6 +211,7 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .fetchCount();
     }
 
+<<<<<<< HEAD
     @Override
     @Modifying
     @Transactional
@@ -188,12 +230,26 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
         logger.info("updateAsset" + update);
         queryFactory.update(asset)
                 .where(asset.assetId.eq(update.getAssetId()))  //assetId : 클라이언트에서 부터 null로 들어오는데, set하는 방법을 모름 or symbol : update에 조인을 어떻게 걸어요??
+=======
+    @Override @Modifying @Transactional
+    public void deleteAsset(Long assetId) {
+        queryFactory.delete(asset)
+                .where(asset.assetId.eq(assetId))
+                .execute();
+    }
+
+    @Override @Modifying @Transactional
+    public void updateAsset(Asset update) {
+        queryFactory.update(asset)
+                .where(asset.assetId.eq(update.getAssetId()))
+>>>>>>> master
 //                .set(asset.assetId, update.getAssetId())
                 .set(asset.purchasePrice, update.getPurchasePrice())
                 .set(asset.shareCount, update.getShareCount())
                 .set(asset.totalAsset, update.getTotalAsset())
                 .set(asset.transactionDate, update.getTransactionDate())
                 .set(asset.transactionType, update.getTransactionType())
+<<<<<<< HEAD
                 .set(asset.totalProfit, update.getTotalProfit())
                 .set(asset.totalProfitRatio, update.getTotalProfitRatio())
                 .set(asset.user.userId, update.getUserId())
@@ -220,3 +276,11 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .execute();
     }*/
 }
+=======
+//                .set(asset.user, update.getUser().getUserId())
+//                .set(asset.stock, update.getStock().getStockId())
+                .execute();
+    }
+
+}
+>>>>>>> master
