@@ -1,6 +1,7 @@
 package com.muffin.web.stock;
 
 import com.muffin.web.util.Pagination;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ interface IStockRepository {
 
     List<String> findMiniListed();
 
+
 //    List<String> paginationStock(Pagination pagination);
 }
 
@@ -38,9 +40,6 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
         this.queryFactory = queryFactory;
         this.dataSource = dataSource;
     }
-
-
-
 
     @Override
     public List<String> findAllSymbol() {

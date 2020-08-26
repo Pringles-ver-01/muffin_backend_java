@@ -21,7 +21,6 @@ public class StockController {
     private StockService stockService;
     private final Pagination pagination;
 
-
     @GetMapping("/csv")
     public void readCsv() {stockService.readCSV();}
 

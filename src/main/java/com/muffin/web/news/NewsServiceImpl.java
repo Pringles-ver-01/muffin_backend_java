@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 interface NewsService extends GenericService<News> {
@@ -20,13 +21,9 @@ interface NewsService extends GenericService<News> {
     List<News> pagination(Pagination pagination);
     List<News> showNewsList();
 
+    List<News> findByNewsSearchWord(String newsSearch);
 
-
-    Optional<News> findById(Long id);
-
-    List<News> findBySearchWord(String searchWord);
-
-    Object findBySearchWordPage(String searchWord, Pagination pagination);
+    Object findByNewsSearchWordPage(String newsSearch, Pagination pagination);
 }
 
 @Service
@@ -45,15 +42,10 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public void readCsv() {
-
-       InputStream is = getClass().getResourceAsStream("/static/news_crawling.csv");
+        InputStream is = getClass().getResourceAsStream("/static/final_news_crawling.csv");
         try {
-            //Reader reader = Files.newBufferedReader(Paths.get("/static/news_crawling.csv"));
-            //CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT);
-            //List<CSVRecord> records = readCSV(COMMENTS_HEADER, config.getCommentsCSV());
-            //Iterable<CSVRecord> csvRecords = csvParser.getRecords();
             for(CSVRecord csvRecord : csvParser){
                 newsRepository.save(new News(
                         csvRecord.get(0),
@@ -74,13 +66,13 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public List<News> findBySearchWord(String searchWord) {
-        return newsRepository.selectNewsContentLikeSearchWord(searchWord);
+    public List<News> findByNewsSearchWord(String newsSearch) {
+        return newsRepository.selectByNewsTitleLikeSearchWord(newsSearch);
     }
 
     @Override
-    public List<News> findBySearchWordPage(String searchWord, Pagination pagination) {
-        return newsRepository.selectNewsContentLikeSearchWordPage(searchWord, pagination);
+    public Object findByNewsSearchWordPage(String newsSearch, Pagination pagination) {
+        return newsRepository.selectByNewsTitleLikeSearchWordPage(newsSearch, pagination);
     }
 
     @Override
@@ -88,11 +80,6 @@ public class NewsServiceImpl implements NewsService{
         return newsRepository.showNewsDetail(newsId);
     }
 
-
-    @Override
-    public Optional<News> findById(Long id) {
-        return newsRepository.findById(id);
-    }
 
     @Override
     public Iterable<News> findAll() {
@@ -113,8 +100,4 @@ public class NewsServiceImpl implements NewsService{
     public boolean exists(String id) {
         return newsRepository.existsById(Long.valueOf(id));
     }
-
 }
-
-
-

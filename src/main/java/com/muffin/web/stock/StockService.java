@@ -5,7 +5,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.jsoup.nodes.Element;
-import org.mapstruct.ObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,6 @@ public interface StockService extends GenericService<Stock> {
     void save(Stock stock);
 
     void readCSV();
-
-
 
     List<CrawledStockVO> allStock();
 
@@ -55,10 +52,6 @@ public interface StockService extends GenericService<Stock> {
         return Optional.empty();
     }
 
-    public Optional<Stock> findById(Long id) {
-        return Optional.empty();
-    }
-
     @Override
     public Iterable<Stock> findAll() {
         return null;
@@ -71,7 +64,6 @@ public interface StockService extends GenericService<Stock> {
 
     @Override
     public void delete(Stock stock) { }
-
 
     @Override
     public boolean exists(String id) {
