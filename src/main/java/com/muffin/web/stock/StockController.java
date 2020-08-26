@@ -5,6 +5,7 @@ import com.muffin.web.util.Pagination;
 import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,6 +21,14 @@ public class StockController {
     private static final Logger logger = LoggerFactory.getLogger(StockController.class);
     private StockService stockService;
     private final Pagination pagination;
+
+    @GetMapping("/search/{stockSearch}")
+    public Map<?,?> searchStock(@PathVariable String stockSearch){
+        System.out.println("stock:"+stockSearch);
+        Map<String, Object> box = new HashMap<>();
+        box.put("list", stockService.findByStockSearchWordPage(stockSearch));
+        return box;
+    }
 
     @GetMapping("/csv")
     public void readCsv() {stockService.readCSV();}

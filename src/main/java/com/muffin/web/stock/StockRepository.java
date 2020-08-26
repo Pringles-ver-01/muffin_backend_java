@@ -7,5 +7,4 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface StockRepository extends JpaRepository<Stock, Long>, IStockRepository {
-
 }

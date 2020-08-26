@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.jsoup.Connection;
@@ -34,6 +35,8 @@ public interface StockService extends GenericService<Stock> {
 
     List<CrawledStockVO> pagination(Pagination pagination);
 
+
+    Object findByStockSearchWordPage(String stockSearch);
 }
 
 @Service class StockServiceImpl implements StockService{
@@ -187,6 +190,12 @@ public interface StockService extends GenericService<Stock> {
         List<CrawledStockVO> result = new ArrayList<>();
         List<Stock> crawledStock= repository.pagination(pagination);
         return getStocksVOS(result, crawledStock);
+    }
+
+
+    @Override
+    public Object findByStockSearchWordPage(String stockSearch) {
+        return repository.selectByStockNameLikeSearchWordPage(stockSearch);
     }
 
     private List<CrawledStockVO> getStocksVOS(List<CrawledStockVO> result,  Iterable<Stock> crawledStock) {

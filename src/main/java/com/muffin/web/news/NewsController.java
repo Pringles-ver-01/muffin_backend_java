@@ -21,9 +21,9 @@ public class NewsController {
 
     @GetMapping("/search/{newsSearch}/{page}/{range}")
     public Map<?,?> searchNews(@PathVariable String newsSearch, @PathVariable int page, @PathVariable int range){
-        System.out.println(newsSearch);
-        System.out.println("page:"+page);
-        System.out.println("range"+range);
+        System.out.println("news:"+newsSearch);
+        System.out.println("news:"+page);
+        System.out.println("news:"+range);
         pagination.pageInfo(page, range, newsService.findByNewsSearchWord(newsSearch).size());
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);

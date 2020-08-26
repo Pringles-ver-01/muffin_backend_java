@@ -24,6 +24,10 @@ interface IStockRepository {
 
     List<String> findMiniListed();
 
+    List<Stock> selectByStockNameLikeSearchWord(String stockSearch);
+
+    Iterable<Stock> selectByStockNameLikeSearchWordPage(String stockSearch);
+
 
 //    List<String> paginationStock(Pagination pagination);
 }
@@ -56,6 +60,28 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
                 .from(stock)
                 .limit(32)
                 .fetch();
+    }
+
+    @Override
+    public List<Stock> selectByStockNameLikeSearchWord(String stockSearch) {
+        return queryFactory.selectFrom(stock)
+                .where(stock.stockName.like("%"+stockSearch+"%"))
+                .fetch();
+    }
+
+    @Override
+    public Iterable<Stock> selectByStockNameLikeSearchWordPage(String stockSearch) {
+        QStock qs = stock;
+        List<Stock> result = new ArrayList<>();
+        result = queryFactory.select(Projections.fields(Stock.class,
+                stock.stockId, stock.symbol, stock.stockName))
+                .where(stock.stockName.like("%"+stockSearch+"%"))
+                .from(stock)
+                .orderBy(stock.stockId.desc())
+                .limit(10)
+                .fetch();
+        System.out.println("stock result: "+result);
+        return result;
     }
 
     @Override
