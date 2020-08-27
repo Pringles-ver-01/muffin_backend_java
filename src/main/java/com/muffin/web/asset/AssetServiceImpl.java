@@ -18,14 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-<<<<<<< HEAD
 import java.util.*;
-=======
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
->>>>>>> master
 
 interface AssetService extends GenericService<Asset> {
 
@@ -33,29 +26,23 @@ interface AssetService extends GenericService<Asset> {
 
 //    List<TransactionLogVO> transacList(Long userId);
 
-<<<<<<< HEAD
     Integer getOnesTotal(Long userId); // 총액
-=======
-    List<Integer> getOnesTotal(Long userId); // 총액
->>>>>>> master
 
     List<TransactionLogVO> getOnesHoldings(Long userId); // 주식목록
 
     List<TransactionLogVO> pagination(Pagination pagination); // 페이징 목록
 
-    void buyStock(TransactionLogVO asset); // 신규 매수
-<<<<<<< HEAD
+    void addStock(TransactionLogVO asset); // update holdingShare 매수
 
-    void updateStock(TransactionLogVO asset); // 총자산, 보유한 종목, 수량 업데이트
+    void buyStock(TransactionLogVO asset); // save list 매수
 
-    void sellStock(TransactionLogVO sellOption); // 매도
-
-=======
     void updateStock(Asset asset); // 총자산, 보유한 종목, 수량 업데이트
+
     void sellStock(TransactionLogVO sellOption); // 매도
->>>>>>> master
+
     boolean existStock(Asset asset); // 종목 존재여부
 
+    void saveAsset(TransactionLogVO update);
 }
 
 @AllArgsConstructor
@@ -70,14 +57,8 @@ public class AssetServiceImpl implements AssetService {
     private Box box;
 
 
-<<<<<<< HEAD
     @Override
     public void readCSV() {
-=======
-
-    @Override
-    public void readCSV(){
->>>>>>> master
         logger.info("AssetServiceImpl : readCSV()");
         InputStream is = getClass().getResourceAsStream("/static/거래내역1 - 시트1 (6).csv");
         try {
@@ -102,77 +83,26 @@ public class AssetServiceImpl implements AssetService {
         }
     }
 
-//    @Override
-//    public List<TransactionLogVO> transacList(Long userId) {
-//        List<TransactionLogVO> result = new ArrayList<>();
-//        List<Asset> list = repository.getTransacList(userId);
-//        TransactionLogVO vo = null;
-//
-//        for(Asset l : list){
-//            vo = new TransactionLogVO();
-//            vo.setTransactionDate(l.getTransactionDate());
-//            vo.setTransactionType(l.getTransactionType());
-//            vo.setPurchasePrice(l.getPurchasePrice());
-//            vo.setShareCount(l.getShareCount());
-//            vo.setTotalAsset(l.getTotalAsset());
-//            vo.setStockName(l.getStock().getStockName());
-//            vo.setUserId(l.getUser().getUserId());
-//            result.add(vo);
-//        }
-//        return result;
-//    }
 
     private void calculrateTotalProfit(Long userId, String symbol) {
         calculrateProfit(userId, symbol).get(1);
     }
 
     @Override
-<<<<<<< HEAD
-    public Integer getOnesTotal(Long userId) { return repository.getRecentProfit(userId).getTotalAsset(); }
-
-    // 사용자의 전체 에셋에 대한 손익 계산
-    private void calculrateTotalProfit(Long userId) {
-        //전체 수익금 = profit[0] + ... + profit[n] : 가지고 있는 주식의 갯수 만큼
-        int ownedStockCount = repository.getOwnedStockCount(userId);
-        for (int i = 0; i < ownedStockCount; i++) {
-//            calculrateProfit(userId, symbol);
-        }
-        //전체 수익률 = (전체 수익금 / 총 매입 금액) * 100
-
+    public Integer getOnesTotal(Long userId) {
+        return repository.getRecentProfit(userId).getTotalAsset();
     }
 
-=======
-    public List getOnesTotal(Long userId) {
-        List result = new ArrayList();
-        result.add(repository.getRecentTotal(userId));
-        return result;
-    }
 
-    // 사용자의 전체 에셋에 대한 손익 계산
-    private void calculrateTotalProfit(Long userId) {
-        //전체 수익금 = profit[0] + ... + profit[n] : 가지고 있는 주식의 갯수 만큼
-        int ownedStockCount = repository.getOwnedStockCount(userId);
-        for(int i = 0; i < ownedStockCount; i ++) {
-//            calculrateProfit(userId, symbol);
-        }
-        //전체 수익률 = (전체 수익금 / 총 매입 금액) * 100
 
-    }
-
->>>>>>> master
     // 보유한 주식 하나의 손익 계산
     private List calculrateProfit(Long userId, String symbol) {
         List result = new ArrayList();
-        logger.info("...calculrating... oneStock... profit...");
 
         Integer nowPrice = Integer.parseInt(stockService.getOneStock(symbol).getNow().replaceAll(",", ""));
         List<Integer> purchaseShares = new ArrayList<>();
         List<Asset> list = repository.findOnesAllAsset(userId);
-<<<<<<< HEAD
         for (Asset l : list) {
-=======
-        for(Asset l : list) {
->>>>>>> master
             purchaseShares.add(l.getPurchasePrice());
             purchaseShares.add(l.getShareCount());
         }
@@ -196,16 +126,11 @@ public class AssetServiceImpl implements AssetService {
         List<Asset> list = repository.findOnesAllAsset(userId);
         TransactionLogVO vo = null;
 
-<<<<<<< HEAD
         for (Asset l : list) {
             if (l.getShareCount() > 0) {
                 vo = new TransactionLogVO();
                 vo.setAssetId(l.getAssetId());
-=======
-        for(Asset l : list) {
-            if(l.getShareCount() > 0) {
-                vo = new TransactionLogVO();
->>>>>>> master
+                vo.setStockId(l.getStock().getStockId());
                 vo.setStockName(l.getStock().getStockName());
                 vo.setTotalAsset(repository.getRecentTotal(userId));
                 vo.setTotalProfit(repository.getRecentProfit(userId).getTotalProfit());
@@ -222,7 +147,6 @@ public class AssetServiceImpl implements AssetService {
                 vo.setNowPrice((Integer) calculrateProfit(userId, l.getStock().getSymbol()).get(3));
                 vo.setHasAsset(true);
                 result.add(vo);
-                logger.info("~~~~getAssetId~~~~~ " +vo.getAssetId());
             } else {
                 vo = new TransactionLogVO();
                 vo.setHasAsset(false);
@@ -239,90 +163,71 @@ public class AssetServiceImpl implements AssetService {
         return getTransactionLogVOS(result, findLogs);
     }
 
-<<<<<<< HEAD
-    @Override //신규 매수
-    public void buyStock(TransactionLogVO invoice) {
-        logger.info("buyStock.... " + invoice);
-        TransactionLogVO asset = new TransactionLogVO();
+    @Override // update 매수
+    public void addStock(TransactionLogVO invoice) {
+        Asset asset = new Asset();
         int recentTotal = repository.getRecentTotal(invoice.getUserId());
         int buyCount = invoice.getShareCount();
         int buyAmount = invoice.getPurchasePrice();
         int newAmount = recentTotal - buyAmount;
-
-        if ( repository.getOwnedShareCount(invoice.getSymbol()) == null ) {
-            int newShareCount = buyCount;
-            int totalProfit = newAmount - recentTotal;
-            double totalProfitRatio = (double) Math.round((double) totalProfit / (double) recentTotal * 10000) / 100;
-
-            asset.setAssetId(invoice.getAssetId());
-            asset.setTransactionType(invoice.getTransactionType());
-            asset.setTransactionDate(invoice.getTransactionDate());
-            asset.setPurchasePrice(invoice.getPurchasePrice());
-            asset.setSymbol(invoice.getSymbol());
-            asset.setStockName(invoice.getStockName());
-            asset.setShareCount(newShareCount);
-            asset.setTotalAsset(newAmount);
-            asset.setTotalProfit(totalProfit);
-            asset.setTotalProfitRatio(totalProfitRatio);
-            asset.setStockId(invoice.getStockId());
-            asset.setUserId(invoice.getUserId());
-
-            logger.info("no exist stock.... " + asset);
-//            repository.save(asset);
-
-        } else {
-            int recentShareCount = repository.getOwnedShareCount(invoice.getSymbol());
-            int newShareCount = recentShareCount + buyCount;
-            int totalProfit = newAmount - recentTotal;
-            double totalProfitRatio = (double) Math.round((double) totalProfit / (double) recentTotal * 10000) / 100;
-
-            asset.setAssetId(invoice.getAssetId());
-            asset.setTransactionType(invoice.getTransactionType());
-            asset.setTransactionDate(invoice.getTransactionDate());
-            asset.setPurchasePrice(invoice.getPurchasePrice());
-            asset.setSymbol(invoice.getSymbol());
-            asset.setStockName(invoice.getStockName());
-            asset.setShareCount(newShareCount);
-            asset.setTotalAsset(newAmount);
-            asset.setTotalProfit(totalProfit);
-            asset.setTotalProfitRatio(totalProfitRatio);
-            asset.setStockId(invoice.getStockId());
-            asset.setUserId(invoice.getUserId());
-
-            logger.info("exist stock...... " + asset);
-            updateStock(asset);
-=======
-    @Override //신규매수
-    public void buyStock(TransactionLogVO invoice) {
-        logger.info("buyStock.... " + invoice);
-        Asset asset = new Asset();
-        int recentTotal = repository.getRecentTotal((long)1).get(0);
-        int recentShareCount = repository.getOwnedShareCount((long)1, invoice.getSymbol());
-        int buyCount = invoice.getShareCount();
-        int buyAmount = invoice.getPurchasePrice();
-        int newAmount = recentTotal - buyAmount;
+        int recentShareCount = repository.getOwnedShareCount(invoice.getSymbol());
         int newShareCount = recentShareCount + buyCount;
+        int totalProfit = newAmount - recentTotal;
+        double totalProfitRatio = (double) Math.round((double) totalProfit / (double) recentTotal * 10000) / 100;
         asset.setTransactionType(invoice.getTransactionType());
         asset.setTransactionDate(invoice.getTransactionDate());
         asset.setPurchasePrice(invoice.getPurchasePrice());
         asset.setShareCount(newShareCount);
         asset.setTotalAsset(newAmount);
+        asset.setTotalProfit(totalProfit);
+        asset.setTotalProfitRatio(totalProfitRatio);
+        asset.setUser(userRepository.findById(invoice.getUserId()).get());
+        asset.setAssetId(invoice.getAssetId());
+        updateStock(asset);
+    }
 
-        if(existStock(asset)){
-            logger.info("exist stock...... "  + asset);
-            updateStock(asset);
-        } else {
-            logger.info("no exist stock.... " + asset);
-            repository.save(asset);
->>>>>>> master
-        }
+    @Override // 신규 매수
+    public void buyStock(TransactionLogVO invoice) {
+        Asset asset = new Asset();
+        int recentTotal = repository.getRecentTotal(invoice.getUserId());
+        int buyAmount = invoice.getPurchasePrice();
+        int newAmount = recentTotal - buyAmount;
+        int totalProfit = newAmount - recentTotal;
+        double totalProfitRatio = (double) Math.round((double) totalProfit / (double) recentTotal * 10000) / 100;
+        asset.setTransactionType(invoice.getTransactionType());
+        asset.setTransactionDate(invoice.getTransactionDate());
+        asset.setPurchasePrice(invoice.getPurchasePrice());
+        asset.setShareCount(invoice.getShareCount());
+        asset.setTotalAsset(newAmount);
+        asset.setTotalProfit(totalProfit);
+        asset.setTotalProfitRatio(totalProfitRatio);
+        asset.setStock(stockRepository.findByStockName(invoice.getStockName()).get());
+        asset.setUser(userRepository.findById(invoice.getUserId()).get());
+        repository.save(asset);
     }
 
     @Override // 총자산, 보유한 종목, 수량 업데이트
-<<<<<<< HEAD
-    public void updateStock(TransactionLogVO update) {
+    public void updateStock(Asset update) {
         repository.updateAsset(update);
     }
+
+    @Override
+    public void saveAsset(TransactionLogVO invoice) {
+        Asset asset;
+        Optional<Asset> findAsset = repository.findById(invoice.getAssetId());
+        asset = findAsset.orElseGet(Asset::new);
+        asset.setStock(stockRepository.findById(invoice.getStockId()).get());
+        asset.setUser(userRepository.findById(invoice.getUserId()).get());
+        asset.setAssetId(asset.getAssetId());
+        asset.setTotalProfitRatio(asset.getTotalProfitRatio());
+        asset.setTotalAsset(asset.getTotalAsset());
+        asset.setShareCount(asset.getShareCount());
+        asset.setPurchasePrice(asset.getPurchasePrice());
+        asset.setTransactionDate(asset.getTransactionDate());
+        asset.setTransactionType(asset.getTransactionType());
+        repository.save(asset);
+    }
+
 
     @Override // 매도
     public void sellStock(TransactionLogVO invoice) {
@@ -353,51 +258,18 @@ public class AssetServiceImpl implements AssetService {
             logger.info("전량 매도오오" + newShareCount);
             repository.deleteAsset(invoice.getShareCount());
         } else {
-            updateStock(asset);
+//            updateStock(asset);
         }
     }
 
-=======
-    public void updateStock(Asset update) {
-        repository.updateAsset(update);
-    }
-
-    @Override // 매도
-    public void sellStock(TransactionLogVO invoice) {
-        logger.info("void sellStock...");
-        Asset asset =  new Asset();
-        int recentTotal = repository.getRecentTotal((long)1).get(0);
-        int recentShareCount = repository.getOwnedShareCount((long)1, invoice.getSymbol());
-        int sellCount = invoice.getShareCount();
-        int money = invoice.getPurchasePrice();
-        int newAmount = recentTotal + money;
-        int newShareCount = recentShareCount - sellCount;
-        asset.setTotalAsset(newAmount);
-        asset.setShareCount(newShareCount);
-        asset.setPurchasePrice(invoice.getPurchasePrice());
-        asset.setTransactionDate(invoice.getTransactionDate());
-        asset.setTransactionType(invoice.getTransactionType());
-        if(newShareCount == 0){
-            repository.deleteAsset((long)1);
-        }else{
-            updateStock(asset);
-        }
-    }
-
->>>>>>> master
     @Override
     public boolean existStock(Asset asset) {
         return repository.existsById(asset.getAssetId());
     }
 
 
-<<<<<<< HEAD
     private List<TransactionLogVO> getTransactionLogVOS(List<TransactionLogVO> result, Iterable<Asset> findLogs) {
         findLogs.forEach(asset -> {
-=======
-    private List<TransactionLogVO> getTransactionLogVOS(List<TransactionLogVO> result, Iterable<Asset> findLogs){
-        findLogs.forEach( asset -> {
->>>>>>> master
             TransactionLogVO vo = new TransactionLogVO();
             vo.setTransactionDate(asset.getTransactionDate());
             vo.setTransactionType(asset.getTransactionType());
@@ -409,11 +281,6 @@ public class AssetServiceImpl implements AssetService {
         return result;
     }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> master
     @Override
     public Iterable<Asset> findAll() {
         return null;
@@ -427,7 +294,6 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public void delete(Asset asset) {
     }
-
 
 
     @Override

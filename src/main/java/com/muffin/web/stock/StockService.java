@@ -6,7 +6,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.jsoup.nodes.Element;
-import org.mapstruct.ObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ import org.jsoup.select.Elements;
 
 public interface StockService extends GenericService<Stock> {
 
-    Optional<Stock> findById(String id);
+    Optional<Stock> findByStockId(Long stockId);
 
     void save(Stock stock);
 
@@ -36,6 +35,9 @@ public interface StockService extends GenericService<Stock> {
     CrawledStockVO getOneStock(String symbol);
 
     List<CrawledStockVO> pagination(Pagination pagination);
+
+    List<CrawledStockVO> findNewsKeywords(); // newsKeywords.csv 읽기
+
 }
 
 @Service
@@ -52,12 +54,8 @@ class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Optional<Stock> findById(String id) {
-        return Optional.empty();
-    }
-
-    public Optional<Stock> findById(Long id) {
-        return Optional.empty();
+    public Optional<Stock> findByStockId(Long stockId) {
+        return repository.findById(stockId);
     }
 
     @Override
@@ -82,7 +80,6 @@ class StockServiceImpl implements StockService {
 
     @Override
     public void readCSV() {
-        logger.info("StockServiceImpl : readCSV()");
         InputStream is = getClass().getResourceAsStream("/static/stocks.csv");
         try {
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -103,7 +100,6 @@ class StockServiceImpl implements StockService {
 
     @Override
     public List<CrawledStockVO> allStock() {
-        logger.info("StockServiceImpl : allStock()");
         List<CrawledStockVO> cralwedResults = new ArrayList<>();
 //        List<String> listedSymbols = repository.findAllSymbol();
 //        for(String stockCode: listedSymbols){
@@ -119,14 +115,12 @@ class StockServiceImpl implements StockService {
 
     @Override
     public CrawledStockVO getOneStock(String symbol) {
-        logger.info("StockServiceImpl : CrawledStockVO getOneStock(String " + symbol + " )");
         CrawledStockVO vo = stockCrawling(symbol);
         return vo;
     }
 
 
     private CrawledStockVO stockCrawling(String stockCode) {
-        logger.info("StockServiceImpl : stockCrawling( " + stockCode + " )");
         CrawledStockVO vo = null;
         try {
             String url = "https://finance.naver.com/item/main.nhn?code=" + stockCode;
@@ -198,6 +192,34 @@ class StockServiceImpl implements StockService {
         List<Stock> crawledStock = repository.pagination(pagination);
         return getStocksVOS(result, crawledStock);
     }
+
+    @Override
+    public List<CrawledStockVO> findNewsKeywords() {
+        List<CrawledStockVO> cralwedResults = new ArrayList<>();
+        InputStream is = getClass().getResourceAsStream("/static/news_threeDays_mining.csv");
+        try {
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT);
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for (CSVRecord csvRecord : csvRecords) {
+                List<String> matchedStock = repository.findSymbolByName(csvRecord.get(0));
+                if (!matchedStock.isEmpty()) {
+                    for (String stockCode : matchedStock) {
+                        cralwedResults.add(stockCrawling(stockCode));
+                    }
+                } else {
+                    System.out.println("일치하는 결과값이 없습니다.");
+                }
+
+                cralwedResults.sort((CrawledStockVO s1, CrawledStockVO s2) -> Integer.parseInt(s2.getDod().replace(",", "")) -
+                        Integer.parseInt(s1.getDod().replace(",", "")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cralwedResults;
+    }
+
 
     private List<CrawledStockVO> getStocksVOS(List<CrawledStockVO> result, Iterable<Stock> crawledStock) {
         List<String> miniListed = repository.findMiniListed();

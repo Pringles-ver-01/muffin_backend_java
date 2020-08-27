@@ -54,54 +54,34 @@ public class AssetController {
 
     @GetMapping("/total/{userId}")
     public HashMap<String, Object> totalAsset(@PathVariable Long userId) {
-        logger.info("/total");
         box.clear();
         box.put("totalAmount", assetService.getOnesTotal(userId));
-        logger.info(assetService.getOnesTotal(userId) + "~~~~~/total  getonetotal");
         return box.get();
     }
 
     @GetMapping("/holdingCount/{userId}")
     public HashMap getHoling(@PathVariable Long userId) {
-        logger.info("/holingCount");
         box.clear();
         box.put("holdingCount", assetService.getOnesHoldings(userId));
         return box.get();
     }
 
-<<<<<<< HEAD
-    @PostMapping("/buy/{userId}")
-    public List<TransactionLogVO> letBuyStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
-        logger.info("AssetController : /buy ~~~~~~~");
-        logger.info(String.valueOf(invoice));
+    @PostMapping("/newStock/{userId}")
+    public List<TransactionLogVO> letBuyNewStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
         assetService.buyStock(invoice);
+        return assetService.getOnesHoldings(userId);
+    }
+
+    @PostMapping("/ownedStock/{userId}")
+    public List<TransactionLogVO> letBuyStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
+        assetService.addStock(invoice);
         return assetService.getOnesHoldings(userId);
     }
 
     @PostMapping("/sell/{userId}")
     public List<TransactionLogVO> letSellStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
-        logger.info("AssetController : /sell");
-        logger.info(String.valueOf(invoice));
         assetService.sellStock(invoice);
         return assetService.getOnesHoldings(userId);
     }
 
 }
-
-
-=======
-    @PostMapping("/sell")
-    public void letSellStock(@RequestBody TransactionLogVO invoice){
-        logger.info("AssetController : /sell");
-        logger.info(String.valueOf(invoice));
-        assetService.sellStock(invoice);
-    }
-
-    @PostMapping("/buy")
-    public void letBuyStock(@RequestBody TransactionLogVO invoice) {
-        logger.info("AssetController : /buy ~~~~~~~");
-        logger.info(String.valueOf(invoice));
-        assetService.buyStock(invoice);
-    }
-}
->>>>>>> master

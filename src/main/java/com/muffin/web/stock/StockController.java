@@ -23,11 +23,12 @@ public class StockController {
     private final Pagination pagination;
 
     @GetMapping("/csv")
-    public void readCsv() {stockService.readCSV();}
+    public void readCsv() {
+        stockService.readCSV();
+    }
 
     @GetMapping("/pagination/{page}/{range}")
-    public Map<?,?> pagination(@PathVariable int page, @PathVariable int range) {
-        System.out.println(page+", "+range);
+    public Map<?, ?> pagination(@PathVariable int page, @PathVariable int range) {
         pagination.pageInfo(page, range, stockService.count());
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
@@ -37,27 +38,22 @@ public class StockController {
 
     @GetMapping("/marketprices")
     public List<CrawledStockVO> getStockPrice() {
-        logger.info("/stockCrawling");
-        return  stockService.allStock();
+        return stockService.allStock();
     }
 
     @GetMapping("/{symbol}")
     public CrawledStockVO getStockDetail(@PathVariable String symbol) {
-        logger.info("/stocks/{stockId}");
         return stockService.getOneStock(symbol);
     }
 
-//    @GetMapping("/candles")
-//    public List<CrawledStockVO> getCandle() {
-//        logger.info("/candle");
-//        return stockService.candleCarts();
-//    }
+    @GetMapping("/recomandedStocks")
+    public List<CrawledStockVO> getFiveStocks() {
+        System.out.println(stockService.findNewsKeywords());
+        return stockService.findNewsKeywords();
+    }
 
-<<<<<<< HEAD
 }
 
 
 
-=======
-}
->>>>>>> master
+

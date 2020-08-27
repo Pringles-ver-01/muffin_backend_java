@@ -9,8 +9,6 @@ import java.util.Date;
 public class CrawledStockVO {
     private String stockName, symbol, date, now, open, high, low, close, volume, transacAmount, dod, capital;
 
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> master
+
