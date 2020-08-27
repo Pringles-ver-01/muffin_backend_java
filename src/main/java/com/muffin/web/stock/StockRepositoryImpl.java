@@ -73,14 +73,15 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
     public Iterable<Stock> selectByStockNameLikeSearchWordPage(String stockSearch) {
         QStock qs = stock;
         List<Stock> result = new ArrayList<>();
-        result = queryFactory.select(Projections.fields(Stock.class,
+        result = queryFactory.selectDistinct(Projections.fields(Stock.class,
                 stock.stockId, stock.symbol, stock.stockName))
                 .where(stock.stockName.like("%"+stockSearch+"%"))
                 .from(stock)
                 .orderBy(stock.stockId.desc())
-                .limit(10)
+                .limit(8)
                 .fetch();
         System.out.println("stock result: "+result);
+        System.out.println("stock result: "+result.size());
         return result;
     }
 

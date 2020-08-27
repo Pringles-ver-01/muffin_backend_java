@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +46,10 @@ public class NewsServiceImpl implements NewsService{
     public void readCsv() {
         InputStream is = getClass().getResourceAsStream("/static/final_news_crawling.csv");
         try {
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT);
-            for(CSVRecord csvRecord : csvParser){
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for(CSVRecord csvRecord : csvRecords){
                 newsRepository.save(new News(
                         csvRecord.get(0),
                         csvRecord.get(1),
