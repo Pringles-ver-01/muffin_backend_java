@@ -1,6 +1,7 @@
 package com.muffin.web.news;
 
-import com.muffin.web.board.Board;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.muffin.web.stock.Stock;
 import com.muffin.web.user.User;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "news")
+@NoArgsConstructor
 public class News {
 
     @Id
@@ -22,7 +24,6 @@ public class News {
     @Column(name = "news_link", length= 8000) private String newsLink;
     @Column(name="news_thumbnail", length= 8000) private String newsThumbnail;
 
-
     @Builder
     News( String newsRegDate, String newsTitle,
           String newsContent, String newsLink, String newsThumbnail){
@@ -33,6 +34,4 @@ public class News {
         this.newsThumbnail = newsThumbnail;
     }
 
-
-    public News() { }
 }

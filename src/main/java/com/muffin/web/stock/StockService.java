@@ -1,4 +1,5 @@
 package com.muffin.web.stock;
+
 import com.muffin.web.util.GenericService;
 import com.muffin.web.util.Pagination;
 import org.apache.commons.csv.CSVFormat;
@@ -21,6 +22,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 public interface StockService extends GenericService<Stock> {
 
     Optional<Stock> findById(String id);
@@ -34,9 +36,14 @@ public interface StockService extends GenericService<Stock> {
     CrawledStockVO getOneStock(String symbol);
 
     List<CrawledStockVO> pagination(Pagination pagination);
+
+    Object findByStockSearchWordPage(String stockSearch);
+
+
 }
 
-@Service class StockServiceImpl implements StockService{
+@Service
+class StockServiceImpl implements StockService {
     private static final Logger logger = LoggerFactory.getLogger(StockServiceImpl.class);
     private final StockRepository repository;
 
@@ -45,7 +52,8 @@ public interface StockService extends GenericService<Stock> {
     }
 
     @Override
-    public void save(Stock stock) { }
+    public void save(Stock stock) {
+    }
 
     @Override
     public Optional<Stock> findById(String id) {
@@ -63,11 +71,12 @@ public interface StockService extends GenericService<Stock> {
 
     @Override
     public int count() {
-        return (int)repository.count();
+        return (int) repository.count();
     }
 
     @Override
-    public void delete(Stock stock) { }
+    public void delete(Stock stock) {
+    }
 
 
     @Override
@@ -80,10 +89,10 @@ public interface StockService extends GenericService<Stock> {
         logger.info("StockServiceImpl : readCSV()");
         InputStream is = getClass().getResourceAsStream("/static/stocks.csv");
         try {
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT);
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
-            for(CSVRecord csvRecord : csvRecords){
+            for (CSVRecord csvRecord : csvRecords) {
                 repository.save(new Stock(
                         csvRecord.get(1),
                         csvRecord.get(2),
@@ -98,14 +107,13 @@ public interface StockService extends GenericService<Stock> {
 
     @Override
     public List<CrawledStockVO> allStock() {
-        logger.info("StockServiceImpl : allStock()");
-        List<CrawledStockVO> cralwedResults =  new ArrayList<>();
+        List<CrawledStockVO> cralwedResults = new ArrayList<>();
 //        List<String> listedSymbols = repository.findAllSymbol();
 //        for(String stockCode: listedSymbols){
 //            t.add(stockCrawling(stockCode)) ;
 //        }
         List<String> miniListed = repository.findMiniListed();
-        for(String stockCode : miniListed) {
+        for (String stockCode : miniListed) {
             cralwedResults.add(stockCrawling(stockCode));
         }
 
@@ -114,14 +122,12 @@ public interface StockService extends GenericService<Stock> {
 
     @Override
     public CrawledStockVO getOneStock(String symbol) {
-        logger.info("StockServiceImpl : CrawledStockVO getOneStock(String " + symbol +" )");
         CrawledStockVO vo = stockCrawling(symbol);
         return vo;
     }
 
 
     private CrawledStockVO stockCrawling(String stockCode) {
-        logger.info("StockServiceImpl : stockCrawling( "+ stockCode +" )");
         CrawledStockVO vo = null;
         try {
             String url = "https://finance.naver.com/item/main.nhn?code=" + stockCode;
@@ -165,7 +171,7 @@ public interface StockService extends GenericService<Stock> {
 
             Elements capital = d.select("#_market_sum");
 
-            for(int i = 0; i < symbol.size(); i++) {
+            for (int i = 0; i < symbol.size(); i++) {
                 vo = new CrawledStockVO();
                 vo.setStockName(stockName.get(i).text());
                 vo.setSymbol(symbol.get(i).text());
@@ -180,7 +186,7 @@ public interface StockService extends GenericService<Stock> {
                 vo.setDod(dodblind.get(i).text());
                 vo.setCapital(capital.get(i).text());
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -190,13 +196,18 @@ public interface StockService extends GenericService<Stock> {
     @Override
     public List<CrawledStockVO> pagination(Pagination pagination) {
         List<CrawledStockVO> result = new ArrayList<>();
-        List<Stock> crawledStock= repository.pagination(pagination);
+        List<Stock> crawledStock = repository.pagination(pagination);
         return getStocksVOS(result, crawledStock);
     }
 
-    private List<CrawledStockVO> getStocksVOS(List<CrawledStockVO> result,  Iterable<Stock> crawledStock) {
+    @Override
+    public Object findByStockSearchWordPage(String stockSearch) {
+        return repository.selectByStockNameLikeSearchWordPage(stockSearch);
+    }
+
+    private List<CrawledStockVO> getStocksVOS(List<CrawledStockVO> result, Iterable<Stock> crawledStock) {
         List<String> miniListed = repository.findMiniListed();
-        for(String stockCode : miniListed) {
+        for (String stockCode : miniListed) {
             result.add(stockCrawling(stockCode));
         }
         return result;

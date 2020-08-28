@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 interface NewsService extends GenericService<News> {
@@ -19,10 +22,10 @@ interface NewsService extends GenericService<News> {
     News getNewsDetailById(Long newsId);
     List<News> pagination(Pagination pagination);
     List<News> showNewsList();
-    Optional<News> findById(Long id);
-    List<News> findBySearchWord(String searchWord);
 
-    Object findBySearchWordPage(String searchWord, Pagination pagination);
+    List<News> findByNewsSearchWord(String newsSearch);
+
+    Object findByNewsSearchWordPage(String newsSearch, Pagination pagination);
 }
 
 @Service
@@ -41,15 +44,12 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public void readCsv() {
-        InputStream is = getClass().getResourceAsStream("/static/news_crawling.csv");
+        InputStream is = getClass().getResourceAsStream("/static/final_news_crawling.csv");
         try {
-            //Reader reader = Files.newBufferedReader(Paths.get("/static/news_crawling.csv"));
-            //CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT);
-            //List<CSVRecord> records = readCSV(COMMENTS_HEADER, config.getCommentsCSV());
-            //Iterable<CSVRecord> csvRecords = csvParser.getRecords();
-            for(CSVRecord csvRecord : csvParser){
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for(CSVRecord csvRecord : csvRecords){
                 newsRepository.save(new News(
                         csvRecord.get(0),
                         csvRecord.get(1),
@@ -69,13 +69,13 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public List<News> findBySearchWord(String searchWord) {
-        return newsRepository.selectNewsContentLikeSearchWord(searchWord);
+    public List<News> findByNewsSearchWord(String newsSearch) {
+        return newsRepository.selectByNewsTitleLikeSearchWord(newsSearch);
     }
 
     @Override
-    public List<News> findBySearchWordPage(String searchWord, Pagination pagination) {
-        return newsRepository.selectNewsContentLikeSearchWordPage(searchWord, pagination);
+    public Object findByNewsSearchWordPage(String newsSearch, Pagination pagination) {
+        return newsRepository.selectByNewsTitleLikeSearchWordPage(newsSearch, pagination);
     }
 
     @Override
@@ -83,11 +83,6 @@ public class NewsServiceImpl implements NewsService{
         return newsRepository.showNewsDetail(newsId);
     }
 
-
-    @Override
-    public Optional<News> findById(Long id) {
-        return newsRepository.findById(id);
-    }
 
     @Override
     public Iterable<News> findAll() {

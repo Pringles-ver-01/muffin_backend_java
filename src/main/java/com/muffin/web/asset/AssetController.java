@@ -26,20 +26,21 @@ public class AssetController {
     private final Pagination pagination;
 
     @GetMapping("/csv")
-    public void readCsv() {assetService.readCSV();}
+    public void readCsv() {
+        assetService.readCSV();
+    }
 
     @GetMapping("/test")
     public void getData() {
         logger.info("/asset/test AssetController");
     }
 
-    @GetMapping("/pagination/{page}/{range}")
-    public Map<?,?> pagination(@PathVariable int page, @PathVariable int range) {
-        System.out.println(page+", "+range);
-        pagination.pageInfo(page, range, assetService.count());
+    @GetMapping("/pagination/{page}/{range}/{userId}")
+    public Map<?, ?> pagination(@PathVariable int page, @PathVariable int range, @PathVariable Long userId) {
+        pagination.pageInfo(page, range, assetService.historyCount(userId));
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
-        box.put("list", assetService.pagination(pagination));
+        box.put("list", assetService.paginationHistory(pagination, userId));
         return box;
     }
 
@@ -51,34 +52,35 @@ public class AssetController {
 //    }
 
     @GetMapping("/total/{userId}")
-    public HashMap totalAsset(@PathVariable Long userId) {
-        logger.info("/total");
+    public HashMap<String, Object> totalAsset(@PathVariable Long userId) {
         box.clear();
-        box.put("totalAsset", assetService.getOnesTotal(userId));
-        box.put("tatalRatio", 999);
-        box.put("totalProfit", 999);
+        box.put("totalAmount", assetService.getOnesTotal(userId));
         return box.get();
     }
 
     @GetMapping("/holdingCount/{userId}")
     public HashMap getHoling(@PathVariable Long userId) {
-        logger.info("/holingCount");
         box.clear();
         box.put("holdingCount", assetService.getOnesHoldings(userId));
         return box.get();
     }
 
-    @PostMapping("/sell")
-    public void letSellStock(@RequestBody TransactionLogVO invoice){
-        logger.info("AssetController : /sell");
-        logger.info(String.valueOf(invoice));
-        assetService.sellStock(invoice);
+    @PostMapping("/ownedStock/{userId}")
+    public List<TransactionLogVO> letBuyStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
+        assetService.addStock(invoice);
+        return assetService.getOnesHoldings(userId);
     }
 
-    @PostMapping("/buy")
-    public void letBuyStock(@RequestBody TransactionLogVO invoice) {
-        logger.info("AssetController : /buy ~~~~~~~");
-        logger.info(String.valueOf(invoice));
+    @PostMapping("/newStock/{userId}")
+    public List<TransactionLogVO> letBuyNewStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
         assetService.buyStock(invoice);
+        return assetService.getOnesHoldings(userId);
     }
+
+    @PostMapping("/sell/{userId}")
+    public List<TransactionLogVO> letSellStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
+        assetService.sellStock(invoice);
+        return assetService.getOnesHoldings(userId);
+    }
+
 }

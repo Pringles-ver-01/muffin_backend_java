@@ -1,4 +1,7 @@
 package com.muffin.web.user;
+import com.muffin.web.asset.Asset;
+import com.muffin.web.asset.AssetRepository;
+import com.muffin.web.stock.Stock;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -26,12 +29,24 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
 
-    public UserServiceImpl(UserRepository repository) {
+    private final AssetRepository assetRepository;
+
+    public UserServiceImpl(UserRepository repository, AssetRepository assetRepository) {
         this.repository = repository;
+        this.assetRepository = assetRepository;
     }
 
     @Override
     public User save(User user) {
+        assetRepository.save(new Asset(0,
+                0,
+                10000000,
+                0,
+                0,
+                "",
+                ""
+                ,user,
+                new Stock()));
         return repository.save(user);
     }
 

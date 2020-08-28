@@ -32,6 +32,10 @@ public class QAsset extends EntityPathBase<Asset> {
 
     public final NumberPath<Integer> totalAsset = createNumber("totalAsset", Integer.class);
 
+    public final NumberPath<Integer> totalProfit = createNumber("totalProfit", Integer.class);
+
+    public final NumberPath<Double> totalProfitRatio = createNumber("totalProfitRatio", Double.class);
+
     public final StringPath transactionDate = createString("transactionDate");
 
     public final StringPath transactionType = createString("transactionType");
