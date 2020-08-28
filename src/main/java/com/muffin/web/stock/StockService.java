@@ -199,10 +199,10 @@ public interface StockService extends GenericService<Stock> {
     }
 
     private List<CrawledStockVO> getStocksVOS(List<CrawledStockVO> result,  Iterable<Stock> crawledStock) {
-        List<String> miniListed = repository.findMiniListed();
-        for(String stockCode : miniListed) {
-            result.add(stockCrawling(stockCode));
-        }
+        for(Stock item : crawledStock) {
+            String symbol = item.getSymbol();
+            result.add(stockCrawling(symbol));
+;        }
         return result;
     }
 

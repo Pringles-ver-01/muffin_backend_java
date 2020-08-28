@@ -58,7 +58,6 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
         logger.info("StockRepositoryImpl  : findMiniListed()");
         return queryFactory.select(stock.symbol)
                 .from(stock)
-                .limit(32)
                 .fetch();
     }
 
