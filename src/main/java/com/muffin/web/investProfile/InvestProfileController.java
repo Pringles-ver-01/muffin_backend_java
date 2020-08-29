@@ -24,4 +24,15 @@ public class InvestProfileController {
         System.out.println(investProfile);
         investProfileService.update(investProfile);
     }
+
+    @GetMapping("/csv")
+    public void csvRead(){
+        investProfileService.readCsv();
+    }
+
+    @GetMapping("/findOne/{userId}")
+    public InvestProfile findOne(@PathVariable Long userId){
+        System.out.println(investProfileService.findOne(userId));
+        return investProfileService.findOne(userId);
+    }
 }

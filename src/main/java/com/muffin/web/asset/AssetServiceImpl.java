@@ -2,7 +2,6 @@ package com.muffin.web.asset;
 
 import com.muffin.web.stock.StockRepository;
 import com.muffin.web.stock.StockService;
-import com.muffin.web.user.User;
 import com.muffin.web.user.UserRepository;
 import com.muffin.web.util.Box;
 import com.muffin.web.util.GenericService;
@@ -32,6 +31,7 @@ interface AssetService extends GenericService<Asset> {
 
     List<TransactionLogVO> pagination(Pagination pagination); // 페이징 목록
 
+<<<<<<< HEAD
     void addStock(TransactionLogVO asset); // update holdingShare 매수
 
     void buyStock(TransactionLogVO asset); // save list 매수
@@ -43,6 +43,22 @@ interface AssetService extends GenericService<Asset> {
     boolean existStock(Asset asset); // 종목 존재여부
 
     void saveAsset(TransactionLogVO update);
+=======
+    void addStock(TransactionLogVO invoice);
+
+    void buyStock(TransactionLogVO asset); // save list 매수
+
+    void sellStock(TransactionLogVO sellOption); // 매도
+
+    void updateStock(Asset update);
+
+    boolean existStock(Asset asset); // 종목 존재여부
+
+    int historyCount(Long userId);
+
+    List<TransactionVO> paginationHistory(Pagination pagination, Long userId);
+
+>>>>>>> master
 }
 
 @AllArgsConstructor
@@ -54,6 +70,10 @@ public class AssetServiceImpl implements AssetService {
     private final UserRepository userRepository;
     private final StockRepository stockRepository;
     private final StockService stockService;
+<<<<<<< HEAD
+=======
+    private final TransactionRepository transactionRepository;
+>>>>>>> master
     private Box box;
 
 
@@ -77,22 +97,45 @@ public class AssetServiceImpl implements AssetService {
                         userRepository.findById(Long.parseLong(csvRecord.get(7))).get(),
                         stockRepository.findById(Long.parseLong(csvRecord.get(8))).get()
                 ));
+                transactionRepository.save(new Transaction(
+                        stockRepository.findById(Long.parseLong(csvRecord.get(8))).get().getStockName(),
+                        Integer.parseInt(csvRecord.get(0)),
+                        csvRecord.get(5),
+                        csvRecord.get(6),
+                        Long.parseLong(csvRecord.get(7)
+                        ),Integer.parseInt(csvRecord.get(3))));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     private void calculrateTotalProfit(Long userId, String symbol) {
         calculrateProfit(userId, symbol).get(1);
     }
 
     @Override
+<<<<<<< HEAD
     public Integer getOnesTotal(Long userId) {
         return repository.getRecentProfit(userId).getTotalAsset();
     }
 
+=======
+    public Integer getOnesTotal(Long userId) { return repository.getRecentProfit(userId).getTotalAsset(); }
+
+    // 사용자의 전체 에셋에 대한 손익 계산
+    private void calculrateTotalProfit(Long userId) {
+        //전체 수익금 = profit[0] + ... + profit[n] : 가지고 있는 주식의 갯수 만큼
+        int ownedStockCount = repository.getOwnedStockCount(userId);
+        for (int i = 0; i < ownedStockCount; i++) {
+//            calculrateProfit(userId, symbol);
+        }
+        //전체 수익률 = (전체 수익금 / 총 매입 금액) * 100
+>>>>>>> master
 
 
     // 보유한 주식 하나의 손익 계산
@@ -130,7 +173,10 @@ public class AssetServiceImpl implements AssetService {
             if (l.getShareCount() > 0) {
                 vo = new TransactionLogVO();
                 vo.setAssetId(l.getAssetId());
+<<<<<<< HEAD
                 vo.setStockId(l.getStock().getStockId());
+=======
+>>>>>>> master
                 vo.setStockName(l.getStock().getStockName());
                 vo.setTotalAsset(repository.getRecentTotal(userId));
                 vo.setTotalProfit(repository.getRecentProfit(userId).getTotalProfit());
@@ -163,7 +209,11 @@ public class AssetServiceImpl implements AssetService {
         return getTransactionLogVOS(result, findLogs);
     }
 
+<<<<<<< HEAD
     @Override // update 매수
+=======
+    @Override
+>>>>>>> master
     public void addStock(TransactionLogVO invoice) {
         Asset asset = new Asset();
         int recentTotal = repository.getRecentTotal(invoice.getUserId());
@@ -183,10 +233,25 @@ public class AssetServiceImpl implements AssetService {
         asset.setTotalProfitRatio(totalProfitRatio);
         asset.setUser(userRepository.findById(invoice.getUserId()).get());
         asset.setAssetId(invoice.getAssetId());
+<<<<<<< HEAD
         updateStock(asset);
     }
 
     @Override // 신규 매수
+=======
+        transactionRepository.save(new Transaction(invoice.getStockName(), buyAmount, invoice.getTransactionDate(), invoice.getTransactionType(), invoice.getUserId(), newAmount));
+        updateStock(asset);
+    }
+
+    @Override
+    public List<TransactionVO> paginationHistory(Pagination pagination, Long userId) {
+        List<TransactionVO> result = new ArrayList<>();
+        List<Transaction> findLogs = transactionRepository.pagination(pagination, userId);
+        return getTransactionVOS(result, findLogs);
+    }
+
+    @Override //신규 매수
+>>>>>>> master
     public void buyStock(TransactionLogVO invoice) {
         Asset asset = new Asset();
         int recentTotal = repository.getRecentTotal(invoice.getUserId());
@@ -201,8 +266,17 @@ public class AssetServiceImpl implements AssetService {
         asset.setTotalAsset(newAmount);
         asset.setTotalProfit(totalProfit);
         asset.setTotalProfitRatio(totalProfitRatio);
+<<<<<<< HEAD
         asset.setStock(stockRepository.findByStockName(invoice.getStockName()).get());
         asset.setUser(userRepository.findById(invoice.getUserId()).get());
+=======
+        System.out.println(invoice.getStockName());
+        System.out.println(stockRepository.findByStockName(invoice.getStockName()).get());
+        asset.setStock(stockRepository.findByStockName(invoice.getStockName()).get());
+        asset.setUser(userRepository.findById(invoice.getUserId()).get());
+        transactionRepository.save(new Transaction(invoice.getStockName(), buyAmount, invoice.getTransactionDate(), invoice.getTransactionType(),
+                invoice.getUserId(), newAmount));
+>>>>>>> master
         repository.save(asset);
     }
 
@@ -232,19 +306,33 @@ public class AssetServiceImpl implements AssetService {
     @Override // 매도
     public void sellStock(TransactionLogVO invoice) {
         logger.info("void sellStock..." + invoice);
+<<<<<<< HEAD
         TransactionLogVO asset = new TransactionLogVO();
+=======
+>>>>>>> master
         int recentTotal = repository.getRecentTotal(invoice.getUserId());
         int recentShareCount = repository.getOwnedShareCount(invoice.getSymbol());
         int sellCount = invoice.getShareCount();
         int money = invoice.getPurchasePrice();
         int newAmount = recentTotal + money;
         int newShareCount = recentShareCount - sellCount;
+<<<<<<< HEAD
         asset.setAssetId(invoice.getAssetId());
         asset.setTotalAsset(newAmount);
         asset.setShareCount(newShareCount);
+=======
+        Asset asset = repository.findById(invoice.getAssetId()).get();
+>>>>>>> master
         asset.setPurchasePrice(invoice.getPurchasePrice());
+        asset.setShareCount(newShareCount);
+        asset.setTotalAsset(newAmount);
+        int totalProfit = newAmount - recentTotal;
+        asset.setTotalProfit(totalProfit);
+        double totalProfitRatio = (double) Math.round((double) totalProfit / (double) recentTotal * 10000) / 100;
+        asset.setTotalProfitRatio(totalProfitRatio);
         asset.setTransactionDate(invoice.getTransactionDate());
         asset.setTransactionType(invoice.getTransactionType());
+<<<<<<< HEAD
         asset.setSymbol(invoice.getSymbol());
         asset.setStockName(invoice.getStockName());
         asset.setUserId(invoice.getUserId());
@@ -259,6 +347,19 @@ public class AssetServiceImpl implements AssetService {
             repository.deleteAsset(invoice.getShareCount());
         } else {
 //            updateStock(asset);
+=======
+        asset.setUser(userRepository.findById(invoice.getUserId()).get());
+        asset.setStock(stockRepository.findById(invoice.getStockId()).get());
+        transactionRepository.save(new Transaction(invoice.getStockName(),
+                money, invoice.getTransactionDate(),
+                invoice.getTransactionType(), invoice.getUserId(), newAmount));
+
+        if (newShareCount == 0) {
+            logger.info("전량 매도오오" + newShareCount);
+            repository.delete(asset);
+        } else {
+            repository.save(asset);
+>>>>>>> master
         }
     }
 
@@ -268,6 +369,23 @@ public class AssetServiceImpl implements AssetService {
     }
 
 
+<<<<<<< HEAD
+=======
+    private List<TransactionVO> getTransactionVOS(List<TransactionVO> result, Iterable<Transaction> findLogs) {
+        findLogs.forEach(transaction -> {
+            TransactionVO vo = new TransactionVO();
+            vo.setStockName(transaction.getStockName());
+            vo.setMoney(transaction.getMoney());
+            vo.setTransactionDate(transaction.getTransactionDate());
+            vo.setTransactionType(transaction.getTransactionType());
+            vo.setUserId(transaction.getUserId());
+            vo.setTotalAsset(transaction.getTotalAsset());
+            result.add(vo);
+        });
+        return result;
+    }
+
+>>>>>>> master
     private List<TransactionLogVO> getTransactionLogVOS(List<TransactionLogVO> result, Iterable<Asset> findLogs) {
         findLogs.forEach(asset -> {
             TransactionLogVO vo = new TransactionLogVO();
@@ -292,6 +410,14 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+<<<<<<< HEAD
+=======
+    public int historyCount(Long userId) {
+        return transactionRepository.findByUserId(userId).size();
+    }
+
+    @Override
+>>>>>>> master
     public void delete(Asset asset) {
     }
 

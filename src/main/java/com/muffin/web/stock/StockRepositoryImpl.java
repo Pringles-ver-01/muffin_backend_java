@@ -1,6 +1,7 @@
 package com.muffin.web.stock;
 
 import com.muffin.web.util.Pagination;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ interface IStockRepository {
 
     List<String> findMiniListed();
 
+<<<<<<< HEAD
     Long findLongBySymbol(String symbol);
 
     List<String> findSymbolByName(String stockName); // 키워드로 심볼 찾기
@@ -29,6 +31,11 @@ interface IStockRepository {
 
 
 //    List<String> paginationStock(Pagination pagination);
+=======
+    List<Stock> selectByStockNameLikeSearchWord(String stockSearch);
+
+    Iterable<Stock> selectByStockNameLikeSearchWordPage(String stockSearch);
+>>>>>>> master
 }
 
 @Repository
@@ -62,11 +69,34 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
     }
 
     @Override
+<<<<<<< HEAD
     public List<String> findSymbolByName(String stockName) {
         return queryFactory.select(stock.symbol)
                 .where(stock.stockName.eq(stockName))
                 .from(stock)
                 .fetch();
+=======
+    public List<Stock> selectByStockNameLikeSearchWord(String stockSearch) {
+        return queryFactory.selectFrom(stock)
+                .where(stock.stockName.like("%"+stockSearch+"%"))
+                .fetch();
+    }
+
+    @Override
+    public Iterable<Stock> selectByStockNameLikeSearchWordPage(String stockSearch) {
+        QStock qs = stock;
+        List<Stock> result = new ArrayList<>();
+        result = queryFactory.selectDistinct(Projections.fields(Stock.class,
+                stock.stockId, stock.symbol, stock.stockName))
+                .where(stock.stockName.like("%"+stockSearch+"%"))
+                .from(stock)
+                .orderBy(stock.stockId.desc())
+                .limit(8)
+                .fetch();
+        System.out.println("stock result: "+result);
+        System.out.println("stock result: "+result.size());
+        return result;
+>>>>>>> master
     }
 
     @Override
@@ -97,3 +127,9 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
 
 
 
+<<<<<<< HEAD
+=======
+}
+
+
+>>>>>>> master

@@ -36,7 +36,12 @@ public interface StockService extends GenericService<Stock> {
 
     List<CrawledStockVO> pagination(Pagination pagination);
 
+<<<<<<< HEAD
     List<CrawledStockVO> findNewsKeywords(); // newsKeywords.csv 읽기
+=======
+    Object findByStockSearchWordPage(String stockSearch);
+
+>>>>>>> master
 
 }
 
@@ -51,6 +56,14 @@ class StockServiceImpl implements StockService {
 
     @Override
     public void save(Stock stock) {
+<<<<<<< HEAD
+=======
+    }
+
+    @Override
+    public Optional<Stock> findById(String id) {
+        return Optional.empty();
+>>>>>>> master
     }
 
     @Override
@@ -194,6 +207,7 @@ class StockServiceImpl implements StockService {
     }
 
     @Override
+<<<<<<< HEAD
     public List<CrawledStockVO> findNewsKeywords() {
         List<CrawledStockVO> cralwedResults = new ArrayList<>();
         InputStream is = getClass().getResourceAsStream("/static/news_threeDays_mining.csv");
@@ -221,6 +235,12 @@ class StockServiceImpl implements StockService {
     }
 
 
+=======
+    public Object findByStockSearchWordPage(String stockSearch) {
+        return repository.selectByStockNameLikeSearchWordPage(stockSearch);
+    }
+
+>>>>>>> master
     private List<CrawledStockVO> getStocksVOS(List<CrawledStockVO> result, Iterable<Stock> crawledStock) {
         List<String> miniListed = repository.findMiniListed();
         for (String stockCode : miniListed) {

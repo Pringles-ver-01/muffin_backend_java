@@ -19,15 +19,18 @@ public class NewsController {
     private Box box;
     private Pagination pagination;
 
-    @GetMapping("/search/{searchWord}/{page}/{range}")
-    public Map<?, ?> search(@PathVariable String searchWord, @PathVariable int page, @PathVariable int range){
-        System.out.println(searchWord);
-        pagination.pageInfo(page, range, newsService.findBySearchWord(searchWord).size());
+    @GetMapping("/search/{newsSearch}/{page}/{range}")
+    public Map<?,?> searchNews(@PathVariable String newsSearch, @PathVariable int page, @PathVariable int range){
+        System.out.println("news:"+newsSearch);
+        System.out.println("news:"+page);
+        System.out.println("news:"+range);
+        pagination.pageInfo(page, range, newsService.findByNewsSearchWord(newsSearch).size());
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
-        box.put("list", newsService.findBySearchWordPage(searchWord, pagination));
+        box.put("list", newsService.findByNewsSearchWordPage(newsSearch, pagination));
         return box;
     }
+
 
     @GetMapping("/pagination/{page}/{range}")
     public Map<?,?> pagination(@PathVariable int page, @PathVariable int range){
@@ -51,7 +54,6 @@ public class NewsController {
 
     @GetMapping("/getDetail/{newsId}")
     public News getNewsDetail(@PathVariable Long newsId){
-        System.out.println(newsId);
         return newsService.getNewsDetailById(newsId);
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface NewsRepository extends JpaRepository<News, Long>, INewsRepository {
-
-    @Query("select e from News e where e.newsTitle like %:searchWord%")
-    List<News> selectNewsContentLikeSearchWord(@Param("searchWord") String searchWord);
+    @Query ("select e from News e where e.newsTitle like %:newsSearch%")
+    List<News> selectByNewsTitleLikeSearchWord(@Param("newsSearch") String newsSearch);
 }

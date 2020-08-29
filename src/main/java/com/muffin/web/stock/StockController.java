@@ -1,4 +1,3 @@
-
 package com.muffin.web.stock;
 
 import com.muffin.web.util.Box;
@@ -36,9 +35,21 @@ public class StockController {
         return box;
     }
 
+    @GetMapping("/search/{stockSearch}")
+    public Map<?,?> searchStock(@PathVariable String stockSearch){
+        System.out.println("stock:"+stockSearch);
+        Map<String, Object> box = new HashMap<>();
+        box.put("list", stockService.findByStockSearchWordPage(stockSearch));
+        return box;
+    }
+
     @GetMapping("/marketprices")
     public List<CrawledStockVO> getStockPrice() {
+<<<<<<< HEAD
         return stockService.allStock();
+=======
+        return  stockService.allStock();
+>>>>>>> master
     }
 
     @GetMapping("/{symbol}")
@@ -57,3 +68,9 @@ public class StockController {
 
 
 
+<<<<<<< HEAD
+=======
+}
+
+
+>>>>>>> master

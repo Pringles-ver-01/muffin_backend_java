@@ -1,4 +1,3 @@
-
 package com.muffin.web.asset;
 
 import lombok.*;

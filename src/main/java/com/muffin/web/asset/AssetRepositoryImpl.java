@@ -32,7 +32,11 @@ interface IAssetRepository {
 
     List<Asset> pagination(Pagination pagination);
 
+<<<<<<< HEAD
     int getOwnedShareCount(String symbol); // 유저아이디와 주식도 같을 때, 해당 보유한 주식의 shareCount수 리턴
+=======
+    Integer getOwnedShareCount(String symbol); // 유저아이디와 주식도 같을 때, 해당 보유한 주식의 shareCount수 리턴
+>>>>>>> master
 
     int getOwnedStockCount(Long userId); // 유저가 가진 종목의 갯수
 
@@ -112,6 +116,8 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 asset.totalProfit,
                 asset.totalProfitRatio
         ))
+<<<<<<< HEAD
+=======
                 .from(asset)
                 .orderBy(asset.transactionDate.desc())
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
@@ -123,6 +129,26 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     }
 
     @Override
+    public Integer getOwnedShareCount(String symbol) {
+        return queryFactory.select(asset.shareCount)
+>>>>>>> master
+                .from(asset)
+                .orderBy(asset.transactionDate.desc())
+                .innerJoin(user).on(asset.user.userId.eq(user.userId))
+                .fetchJoin()
+<<<<<<< HEAD
+                .where(asset.user.userId.eq(userId))
+                .orderBy(asset.transactionDate.desc())
+                .limit(1)
+=======
+//                .where(asset.user.userId.eq(userId))
+                .where(asset.stock.symbol.eq(symbol))
+>>>>>>> master
+                .fetchOne();
+    }
+
+    @Override
+<<<<<<< HEAD
     public int getOwnedShareCount(String symbol) {
         return queryFactory.select(asset.shareCount)
                 .from(asset)
@@ -135,6 +161,9 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
 
     @Override
     public int getOwnedStockCount(Long userId) {
+=======
+    public Integer getOwnedStockCount(Long userId) {
+>>>>>>> master
         return (int) queryFactory.select(asset.stock.stockName)
                 .from(asset)
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
@@ -171,4 +200,27 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
 //                .set(asset.stock.stockId, update.getStockId())
                 .execute();
     }
+<<<<<<< HEAD
 }
+=======
+
+    /*@Override
+    @Modifying
+    @Transactional
+    public void saveAsset(TransactionLogVO update) {
+        logger.info("saveAsset" + update);
+        queryFactory.update(asset)
+                .set(asset.purchasePrice, update.getPurchasePrice())
+                .set(asset.shareCount, update.getShareCount())
+                .set(asset.totalAsset, update.getTotalAsset())
+                .set(asset.transactionDate, update.getTransactionDate())
+                .set(asset.transactionType, update.getTransactionType())
+                .set(asset.totalProfit, update.getTotalProfit())
+                .set(asset.totalProfitRatio, update.getTotalProfitRatio())
+                .set(asset.stock.stockId, update.getStockId())
+                .set(asset.user.userId, update.getUserId())
+                .set(asset.stock.stockId, update.getStockId())
+                .execute();
+    }*/
+}
+>>>>>>> master
