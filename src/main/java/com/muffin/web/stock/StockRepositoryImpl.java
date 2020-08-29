@@ -63,7 +63,6 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
 
     @Override
     public List<String> findSymbolByName(String stockName) {
-        logger.info("keyword~~~~~~~" + stockName);
         return queryFactory.select(stock.symbol)
                 .where(stock.stockName.eq(stockName))
                 .from(stock)
