@@ -1,13 +1,8 @@
 package com.muffin.web.user;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -16,7 +11,6 @@ public class UserController {
 
     private final UserService userService;
     private final MailService mailService;
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserService userService, MailService mailService) {
         this.userService = userService;
@@ -41,16 +35,12 @@ public class UserController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<Map<?,?>> login(@RequestBody User user) {
+    public ResponseEntity<User> login(@RequestBody User user) {
         System.out.println(user);
         Optional<User> findUser = userService.findByEmailId(user.getEmailId());
-
         if (findUser.isPresent()) {
             User returnUser = findUser.get();
-            Map<String ,Object> box = new HashMap<>();
-            box.put("loginedUser", returnUser);
-            box.put("usersAsset", userService.findUsersAsset((long) 1));
-            return returnUser.getPassword().equals(user.getPassword()) ? ResponseEntity.ok(box) : ResponseEntity.badRequest().build();
+            return returnUser.getPassword().equals(user.getPassword()) ? ResponseEntity.ok(returnUser) : ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -35,16 +35,9 @@ public class AssetController {
         logger.info("/asset/test AssetController");
     }
 
-<<<<<<< HEAD
-    @GetMapping("/pagination/{page}/{range}")
-    public Map<?, ?> pagination(@PathVariable int page, @PathVariable int range) {
-        System.out.println(page + ", " + range);
-        pagination.pageInfo(page, range, assetService.count());
-=======
     @GetMapping("/pagination/{page}/{range}/{userId}")
     public Map<?, ?> pagination(@PathVariable int page, @PathVariable int range, @PathVariable Long userId) {
         pagination.pageInfo(page, range, assetService.historyCount(userId));
->>>>>>> master
         Map<String, Object> box = new HashMap<>();
         box.put("pagination", pagination);
         box.put("list", assetService.paginationHistory(pagination, userId));
@@ -72,27 +65,6 @@ public class AssetController {
         return box.get();
     }
 
-<<<<<<< HEAD
-    @PostMapping("/newStock/{userId}")
-    public List<TransactionLogVO> letBuyNewStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
-        assetService.buyStock(invoice);
-        return assetService.getOnesHoldings(userId);
-    }
-
-    @PostMapping("/ownedStock/{userId}")
-    public List<TransactionLogVO> letBuyStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
-        assetService.addStock(invoice);
-        return assetService.getOnesHoldings(userId);
-    }
-
-    @PostMapping("/sell/{userId}")
-    public List<TransactionLogVO> letSellStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
-        assetService.sellStock(invoice);
-        return assetService.getOnesHoldings(userId);
-    }
-
-}
-=======
     @PostMapping("/ownedStock/{userId}")
     public List<TransactionLogVO> letBuyStock(@PathVariable Long userId, @RequestBody TransactionLogVO invoice) {
         assetService.addStock(invoice);
@@ -112,4 +84,3 @@ public class AssetController {
     }
 
 }
->>>>>>> master

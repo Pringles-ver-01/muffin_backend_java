@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.muffin.web.stock.QStock.stock;
@@ -23,19 +24,9 @@ interface IStockRepository {
 
     List<String> findMiniListed();
 
-<<<<<<< HEAD
-    Long findLongBySymbol(String symbol);
-
-    List<String> findSymbolByName(String stockName); // 키워드로 심볼 찾기
-
-
-
-//    List<String> paginationStock(Pagination pagination);
-=======
     List<Stock> selectByStockNameLikeSearchWord(String stockSearch);
 
     Iterable<Stock> selectByStockNameLikeSearchWordPage(String stockSearch);
->>>>>>> master
 }
 
 @Repository
@@ -53,8 +44,10 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
 
 
 
+
     @Override
     public List<String> findAllSymbol() {
+        logger.info("StockRepositoryImpl  : findAllSymbol()");
         return queryFactory.select(stock.symbol)
                 .from(stock)
                 .fetch();
@@ -62,6 +55,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
 
     @Override
     public List<String> findMiniListed() {
+        logger.info("StockRepositoryImpl  : findMiniListed()");
         return queryFactory.select(stock.symbol)
                 .from(stock)
                 .limit(32)
@@ -69,13 +63,6 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
     }
 
     @Override
-<<<<<<< HEAD
-    public List<String> findSymbolByName(String stockName) {
-        return queryFactory.select(stock.symbol)
-                .where(stock.stockName.eq(stockName))
-                .from(stock)
-                .fetch();
-=======
     public List<Stock> selectByStockNameLikeSearchWord(String stockSearch) {
         return queryFactory.selectFrom(stock)
                 .where(stock.stockName.like("%"+stockSearch+"%"))
@@ -96,7 +83,6 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
         System.out.println("stock result: "+result);
         System.out.println("stock result: "+result.size());
         return result;
->>>>>>> master
     }
 
     @Override
@@ -104,6 +90,16 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
         return queryFactory.selectFrom(stock).orderBy(stock.stockId.asc())
                 .offset(pagination.getStartList()).limit(pagination.getListSize()).fetch();
     }
+
+//    @Override
+//    public List<List<String>>paginationStock(Pagination pagination) {
+//        logger.info("StockRepositoryImpl  : paginationStock()...pagination&&stock");
+//        List<List<String>>paginationStock = new ArrayList<>();
+//
+//        List<>
+//
+//        return
+//    }
 
 
     @Override
@@ -113,23 +109,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements IS
                 .fetchFirst();
     }
 
-    @Override
-    public Long findLongBySymbol(String symbol) {
-        return queryFactory.select(stock.stockId)
-                .where(stock.symbol.eq(symbol))
-                .from(stock)
-                .fetchOne();
-    }
 
 
 }
 
-
-
-
-<<<<<<< HEAD
-=======
-}
-
-
->>>>>>> master

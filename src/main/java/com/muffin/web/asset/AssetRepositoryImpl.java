@@ -32,13 +32,9 @@ interface IAssetRepository {
 
     List<Asset> pagination(Pagination pagination);
 
-<<<<<<< HEAD
-    int getOwnedShareCount(String symbol); // 유저아이디와 주식도 같을 때, 해당 보유한 주식의 shareCount수 리턴
-=======
     Integer getOwnedShareCount(String symbol); // 유저아이디와 주식도 같을 때, 해당 보유한 주식의 shareCount수 리턴
->>>>>>> master
 
-    int getOwnedStockCount(Long userId); // 유저가 가진 종목의 갯수
+    Integer getOwnedStockCount(Long userId); // 유저가 가진 종목의 갯수
 
     void deleteAsset(int shareCount);
 
@@ -71,6 +67,26 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     }
 
 
+//    @Override
+//    public List<Asset> getTransacList(Long userId) {
+//        logger.info("AssetRepositoryImpl : getTransacList()");
+//        return queryFactory.select(Projections.fields(Asset.class,
+//                asset.purchasePrice,
+//                asset.shareCount,
+//                asset.totalAsset,
+//                asset.assetId,
+//                asset.transactionDate,
+//                asset.transactionType,
+//                stock,
+//                user))
+//                .from(asset)
+//                .innerJoin(user).on(asset.user.userId.eq(user.userId))
+//                .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
+//                .fetchJoin()
+//                .where(asset.user.userId.eq(userId))
+//                .fetch();
+//    }
+
     @Override
     public List<Asset> findOnesAllAsset(Long userId) {
         return queryFactory.select(Projections.fields(Asset.class,
@@ -91,6 +107,7 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
 
     @Override
     public List<Asset> pagination(Pagination pagination) {
+        System.out.println(pagination);
         return queryFactory.selectFrom(asset).orderBy(asset.transactionDate.desc())
                 .offset(pagination.getStartList()).limit(pagination.getListSize()).fetch();
     }
@@ -116,8 +133,6 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 asset.totalProfit,
                 asset.totalProfitRatio
         ))
-<<<<<<< HEAD
-=======
                 .from(asset)
                 .orderBy(asset.transactionDate.desc())
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
@@ -131,39 +146,17 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
     @Override
     public Integer getOwnedShareCount(String symbol) {
         return queryFactory.select(asset.shareCount)
->>>>>>> master
                 .from(asset)
-                .orderBy(asset.transactionDate.desc())
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
+                .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
                 .fetchJoin()
-<<<<<<< HEAD
-                .where(asset.user.userId.eq(userId))
-                .orderBy(asset.transactionDate.desc())
-                .limit(1)
-=======
 //                .where(asset.user.userId.eq(userId))
                 .where(asset.stock.symbol.eq(symbol))
->>>>>>> master
                 .fetchOne();
     }
 
     @Override
-<<<<<<< HEAD
-    public int getOwnedShareCount(String symbol) {
-        return queryFactory.select(asset.shareCount)
-                .from(asset)
-                .innerJoin(stock).on(asset.stock.stockId.eq(stock.stockId))
-                .fetchJoin()
-                .where(asset.stock.symbol.eq(symbol))
-                .fetchFirst();
-    }
-
-
-    @Override
-    public int getOwnedStockCount(Long userId) {
-=======
     public Integer getOwnedStockCount(Long userId) {
->>>>>>> master
         return (int) queryFactory.select(asset.stock.stockName)
                 .from(asset)
                 .innerJoin(user).on(asset.user.userId.eq(user.userId))
@@ -200,9 +193,6 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
 //                .set(asset.stock.stockId, update.getStockId())
                 .execute();
     }
-<<<<<<< HEAD
-}
-=======
 
     /*@Override
     @Modifying
@@ -223,4 +213,3 @@ public class AssetRepositoryImpl extends QuerydslRepositorySupport implements IA
                 .execute();
     }*/
 }
->>>>>>> master
