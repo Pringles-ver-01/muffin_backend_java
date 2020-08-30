@@ -38,16 +38,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        assetRepository.save(new Asset(0,
-                0,
-                10000000,
-                0,
-                0,
-                "",
-                ""
-                ,user,
-                new Stock()));
-        return repository.save(user);
+        User returnUser = repository.save(user);
+        Asset asset = new Asset();
+        asset.setTotalAsset(10000000);
+        asset.setUser(returnUser);
+        assetRepository.save(asset);
+
+        return returnUser;
     }
 
     @Override

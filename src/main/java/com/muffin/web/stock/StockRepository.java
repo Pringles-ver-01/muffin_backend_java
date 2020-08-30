@@ -1,6 +1,5 @@
 package com.muffin.web.stock;
 
-import com.muffin.web.util.Box;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,6 +10,6 @@ public interface StockRepository extends JpaRepository<Stock, Long>, IStockRepos
 
 
     public Optional<Stock> findByStockName(String stockName);
-
-    boolean existsBySymbol(String symbol);
 }
+
+

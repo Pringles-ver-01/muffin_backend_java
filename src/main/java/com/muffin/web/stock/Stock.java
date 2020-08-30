@@ -1,6 +1,5 @@
 package com.muffin.web.stock;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.muffin.web.asset.Asset;
 import com.muffin.web.board.Board;
 import com.muffin.web.user.User;
